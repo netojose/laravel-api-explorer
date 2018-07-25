@@ -1,0 +1,42 @@
+{
+    "name": "apiexplorer",
+    "version": "1.0.0",
+    "description": "API explorer front end",
+    "main": "index.js",
+    "keywords": [
+        "API",
+        "explorer",
+        "React",
+        "Laravel"
+    ],
+    "author": "José Neto",
+    "license": "MIT",
+    "scripts": {
+        "dev": "webpack ---mode=development",
+        "dev:watch": "webpack ---mode=development --watch",
+        "build": "webpack ---mode=production"
+    },
+    "dependencies": {
+        "axios": "^0.18.0",
+        "bootstrap": "^4.1.2",
+        "emotion": "^9.2.6",
+        "hash-sum": "^1.0.2",
+        "jsoneditor": "^5.19.0",
+        "react": "^16.4.1",
+        "react-dom": "^16.4.1"
+    },
+    "devDependencies": {
+        "babel-core": "^6.26.3",
+        "babel-loader": "^7.1.5",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "babel-preset-react": "^6.24.1",
+        "css-loader": "^1.0.0",
+        "eslint": "^5.1.0",
+        "mini-css-extract-plugin": "^0.4.1",
+        "svg-url-loader": "^2.3.2",
+        "webpack": "^4.16.0",
+        "webpack-cli": "^3.0.8"
+    }
+}
