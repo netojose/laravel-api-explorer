@@ -26,15 +26,37 @@ class LaravelApiExplorer
     private function getRoutes() {
         $routes = [];
         $routeCollection = Route::getRoutes();
-        $allRoutes = $routeCollection->getRoutes();
+
+        $laravelRoutes = $routeCollection->getRoutes();
+        $dingoRoutes = $this->getDingoRoutes();
+
+        $allRoutes = array_merge($laravelRoutes, $dingoRoutes);
         
-        return $this->filterRoutes($allRoutes);;
+        return $this->filterRoutes($allRoutes);
+    }
+
+    private function getDingoRoutes() {
+
+        if(!class_exists(\Dingo\Api\Routing\Router::class)){
+            return [];
+        }
+
+        $dingoRouter = app('Dingo\Api\Routing\Router');
+        $versions = $dingoRouter->getRoutes();
+        $routes = [];
+        foreach($versions as $version){
+            $routes[] = $version->getRoutes();
+        }
+
+        $routes = collect($routes)->flatten()->toArray();
+
+        return $routes;
     }
 
     private function filterRoutes($routes) {
         $filtered = [];
 
-        $match = config('laravelapiexplorer.match');
+        $match = trim(config('laravelapiexplorer.match'), '/');
         $ignoreList = collect(config('laravelapiexplorer.ignore'));
         $ignoreList->push('laravelapiexplorer.view');
         $ignoreList->push('laravelapiexplorer.info');
@@ -42,7 +64,7 @@ class LaravelApiExplorer
 
         foreach($routes as $route) {
             $name = $route->getName();
-            $uri = $route->uri();
+            $uri = trim($route->uri(), '/');
 
             if(
                 !str_is($match, $name) &&
@@ -91,7 +113,7 @@ class LaravelApiExplorer
             'name' => $route->getName(),
             'description' => $description,
             'url' => url($uri),
-            'uri' => $uri,
+            'uri' => trim($uri, '/'),
             'exists' => $exists,
             'http_verb' => $httpVerb,
             'controller' => $controller,
