@@ -8,22 +8,25 @@ use ReflectionMethod;
 
 class LaravelApiExplorer
 {
-    public function loadRoutesInfo() {
+    public function loadRoutesInfo()
+    {
         $items = [];
         $routes = $this->getRoutes();
 
-        foreach($routes as $route) {
+        foreach ($routes as $route) {
             $items[] = $this->formatRoute($route);
         }
-        
+
         return $items;
     }
 
-    public function getConfig() {
+    public function getConfig()
+    {
         return [];
     }
 
-    private function getRoutes() {
+    private function getRoutes()
+    {
         $routes = [];
         $routeCollection = Route::getRoutes();
 
@@ -31,20 +34,21 @@ class LaravelApiExplorer
         $dingoRoutes = $this->getDingoRoutes();
 
         $allRoutes = array_merge($laravelRoutes, $dingoRoutes);
-        
+
         return $this->filterRoutes($allRoutes);
     }
 
-    private function getDingoRoutes() {
+    private function getDingoRoutes()
+    {
 
-        if(!class_exists(\Dingo\Api\Routing\Router::class)){
+        if (!class_exists(\Dingo\Api\Routing\Router::class)) {
             return [];
         }
 
         $dingoRouter = app('Dingo\Api\Routing\Router');
         $versions = $dingoRouter->getRoutes();
         $routes = [];
-        foreach($versions as $version){
+        foreach ($versions as $version) {
             $routes[] = $version->getRoutes();
         }
 
@@ -53,7 +57,8 @@ class LaravelApiExplorer
         return $routes;
     }
 
-    private function filterRoutes($routes) {
+    private function filterRoutes($routes)
+    {
         $filtered = [];
 
         $match = trim(config('laravelapiexplorer.match'), '/');
@@ -62,14 +67,14 @@ class LaravelApiExplorer
         $ignoreList->push('laravelapiexplorer.info');
         $ignoreList->push('laravelapiexplorer.asset');
 
-        foreach($routes as $route) {
+        foreach ($routes as $route) {
             $name = $route->getName();
             $uri = trim($route->uri(), '/');
 
-            if(
+            if (
                 !str_is($match, $name) &&
                 !str_is($match, $uri)
-            ){
+            ) {
                 continue;
             }
 
@@ -77,7 +82,7 @@ class LaravelApiExplorer
                 return $value == $name || $value == $uri;
             });
 
-            if($ignore) {
+            if ($ignore) {
                 continue;
             }
 
@@ -87,19 +92,26 @@ class LaravelApiExplorer
         return $filtered;
     }
 
-    private function formatRoute($route) {
+    private function formatRoute($route)
+    {
         $action = $route->getAction();
 
-        $controller = null;
         $method = null;
         $exists = true;
         $description = '';
         $rules = [];
-        if(isset($action['controller'])){
-            list($controller, $method) = explode('@', $action['controller'], 2);
+        $controller = $action['controller'] ?? null;
+        if ($controller) {
+
+            if (strpos($controller, '@') !== false) {
+                list($controller, $method) = explode('@', $action['controller'], 2);
+            } else {
+                $method = '__invoke';
+            }
+
             $exists = class_exists($controller) && method_exists($controller, $method);
 
-            if($exists) {
+            if ($exists) {
                 $rules = $this->getRules($controller, $method);
                 $description = $this->getMethodDescription($controller, $method);
             }
@@ -107,8 +119,10 @@ class LaravelApiExplorer
 
         $uri = $route->uri();
 
-        $httpVerb = collect($route->methods())->filter(function ($value) {return $value != 'HEAD';})->first();
-        
+        $httpVerb = collect($route->methods())->filter(function ($value) {
+            return $value != 'HEAD';
+        })->first();
+
         return [
             'name' => $route->getName(),
             'description' => $description,
@@ -125,7 +139,8 @@ class LaravelApiExplorer
         ];
     }
 
-    private function getMethodDescription($controller, $method) {
+    private function getMethodDescription($controller, $method)
+    {
         $reflectionMethod = new ReflectionMethod($controller, $method);
         $comment = $reflectionMethod->getDocComment();
 
@@ -136,24 +151,25 @@ class LaravelApiExplorer
         return (isset($found[0]) && substr($found[0], 0, 1) != '@') ? $found[0] : '';
     }
 
-    private function getRules($controller, $method) {
+    private function getRules($controller, $method)
+    {
         $rules = new \stdClass();
 
         $requestClass = null;
         $reflectionMethod = new ReflectionMethod($controller, $method);
         $params = $reflectionMethod->getParameters();
 
-        if(count($params)) {
+        if (count($params)) {
             $parameter = new ReflectionParameter([$controller, $method], 0);
             $requestClass = $parameter->getClass();
         }
 
-        if($requestClass && $requestClass->hasMethod('rules')){
+        if ($requestClass && $requestClass->hasMethod('rules')) {
             $className = $requestClass->name;
             $reflectionMethod = new ReflectionMethod($className, 'rules');
             $allRules = $reflectionMethod->invoke(new $className());
 
-            foreach($allRules as $field => $rule){
+            foreach ($allRules as $field => $rule) {
                 $rules->$field =  $this->formatRule($rule);
             }
         }
@@ -161,20 +177,21 @@ class LaravelApiExplorer
         return $rules;
     }
 
-    private function formatRule($ruleset) {
-        if(is_string($ruleset)) {
+    private function formatRule($ruleset)
+    {
+        if (is_string($ruleset)) {
             $ruleset = explode('|', $ruleset);
         }
 
         $rules = [];
 
-        foreach($ruleset as $ruleItem) {
+        foreach ($ruleset as $ruleItem) {
             $rule = $ruleItem;
 
-            if(is_object($rule)) {
+            if (is_object($rule)) {
                 $rule = get_class($ruleItem);
             }
-            
+
             $rules[] = $rule;
         }
 
