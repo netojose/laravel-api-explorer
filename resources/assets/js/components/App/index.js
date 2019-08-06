@@ -1,196 +1,202 @@
-import React, { Fragment } from "react"
-import hashSum from "hash-sum"
-import axios from "axios"
-import { css } from "emotion"
+import React from "react"
 
-import AppSettings from "../AppSettings"
-import TopBar from "../TopBar"
-import Modal from "../Modal"
-import RoutesList from "../RoutesList"
-import RouteArea from "../RouteArea"
+const App = () => <p>Oi</p>
 
-const drawerClass = css({
-    background: "#fff",
-    position: "fixed",
-    left: 0,
-    top: 0,
-    zIndex: 999,
-    overflowY: "auto",
-    width: 270,
-    height: "100vh",
-    padding: 5,
-    boxShadow: "none",
-    transform: "translateX(-270px)",
-    transition: "all 250ms ease-in-out",
-    "&.show": {
-        boxShadow: "11px 0px 70px 15px rgba(0,0,0,0.37)",
-        transform: "translateX(0px)"
-    }
-})
+export default App
 
-const overlayClass = css({
-    width: "100vw",
-    height: "100vh",
-    position: "fixed",
-    width: "0vw",
-    height: "0vh",
-    zIndex: 998,
-    left: 0,
-    top: 0,
-    background: "#000",
-    transition: "opacity 350ms ease-in-out",
-    opacity: 0,
-    "&.show": {
-        width: "100vw",
-        height: "100vh",
-        opacity: 0.7
-    }
-})
+// import React, { Fragment } from "react"
+// import hashSum from "hash-sum"
+// import axios from "axios"
+// import { css } from "emotion"
 
-export default class App extends React.Component {
-    state = {
-        allRoutes: [],
-        filteredRoutes: [],
-        selectedRouteId: null,
-        filterTerm: "",
-        config: {},
-        settingsOpened: false,
-        drawerOpened: false
-    }
+// import AppSettings from "../AppSettings"
+// import TopBar from "../TopBar"
+// import Modal from "../Modal"
+// import RoutesList from "../RoutesList"
+// import RouteArea from "../RouteArea"
 
-    componentDidMount() {
-        axios.get(window.api_info_url).then(response => {
-            const { routes, config } = response.data
-            const allRoutes = this.setIds(routes)
-            const filteredRoutes = routes
-            this.setState({ allRoutes, filteredRoutes, config })
-        })
-    }
+// const drawerClass = css({
+//     background: "#fff",
+//     position: "fixed",
+//     left: 0,
+//     top: 0,
+//     zIndex: 999,
+//     overflowY: "auto",
+//     width: 270,
+//     height: "100vh",
+//     padding: 5,
+//     boxShadow: "none",
+//     transform: "translateX(-270px)",
+//     transition: "all 250ms ease-in-out",
+//     "&.show": {
+//         boxShadow: "11px 0px 70px 15px rgba(0,0,0,0.37)",
+//         transform: "translateX(0px)"
+//     }
+// })
 
-    componentDidUpdate(prevProps, prevState) {
-        const { drawerOpened } = this.state
-        if (drawerOpened === prevState.drawerOpened) {
-            return
-        }
+// const overlayClass = css({
+//     width: "100vw",
+//     height: "100vh",
+//     position: "fixed",
+//     width: "0vw",
+//     height: "0vh",
+//     zIndex: 998,
+//     left: 0,
+//     top: 0,
+//     background: "#000",
+//     transition: "opacity 350ms ease-in-out",
+//     opacity: 0,
+//     "&.show": {
+//         width: "100vw",
+//         height: "100vh",
+//         opacity: 0.7
+//     }
+// })
 
-        if (drawerOpened) {
-            this.addEscHandlerCloseDrawer()
-        } else {
-            this.removeEscHandlerCloseDrawer()
-        }
-    }
+// export default class App extends React.Component {
+//     state = {
+//         allRoutes: [],
+//         filteredRoutes: [],
+//         selectedRouteId: null,
+//         filterTerm: "",
+//         config: {},
+//         settingsOpened: false,
+//         drawerOpened: false
+//     }
 
-    componentWillUnmount() {
-        this.removeEscHandlerCloseDrawer()
-    }
+//     componentDidMount() {
+//         axios.get(window.api_info_url).then(response => {
+//             const { routes, config } = response.data
+//             const allRoutes = this.setIds(routes)
+//             const filteredRoutes = routes
+//             this.setState({ allRoutes, filteredRoutes, config })
+//         })
+//     }
 
-    addEscHandlerCloseDrawer() {
-        document.addEventListener(
-            "keydown",
-            this.handleEscToCloseDrawer.bind(this)
-        )
-    }
+//     componentDidUpdate(prevProps, prevState) {
+//         const { drawerOpened } = this.state
+//         if (drawerOpened === prevState.drawerOpened) {
+//             return
+//         }
 
-    removeEscHandlerCloseDrawer() {
-        document.removeEventListener(
-            "keydown",
-            this.handleEscToCloseDrawer.bind(this)
-        )
-    }
+//         if (drawerOpened) {
+//             this.addEscHandlerCloseDrawer()
+//         } else {
+//             this.removeEscHandlerCloseDrawer()
+//         }
+//     }
 
-    handleEscToCloseDrawer(event) {
-        if (event.keyCode === 27) {
-            this.handleCloseDrawer()
-        }
-    }
+//     componentWillUnmount() {
+//         this.removeEscHandlerCloseDrawer()
+//     }
 
-    setIds = routes => {
-        return routes.map(route => {
-            route.__id = "route_" + hashSum(route)
-            return route
-        })
-    }
+//     addEscHandlerCloseDrawer() {
+//         document.addEventListener(
+//             "keydown",
+//             this.handleEscToCloseDrawer.bind(this)
+//         )
+//     }
 
-    getCurrentRoute = () => {
-        return this.state.allRoutes.find(
-            route => route.__id === this.state.selectedRouteId
-        )
-    }
+//     removeEscHandlerCloseDrawer() {
+//         document.removeEventListener(
+//             "keydown",
+//             this.handleEscToCloseDrawer.bind(this)
+//         )
+//     }
 
-    handleOpenSettings = () => {
-        this.setState({ settingsOpened: true })
-    }
+//     handleEscToCloseDrawer(event) {
+//         if (event.keyCode === 27) {
+//             this.handleCloseDrawer()
+//         }
+//     }
 
-    handleCloseSettings = () => {
-        this.setState({ settingsOpened: false })
-    }
+//     setIds = routes => {
+//         return routes.map(route => {
+//             route.__id = "route_" + hashSum(route)
+//             return route
+//         })
+//     }
 
-    handleOpenDrawer = () => {
-        this.setState({ drawerOpened: true })
-    }
+//     getCurrentRoute = () => {
+//         return this.state.allRoutes.find(
+//             route => route.__id === this.state.selectedRouteId
+//         )
+//     }
 
-    handleCloseDrawer = () => {
-        this.setState({ drawerOpened: false })
-    }
+//     handleOpenSettings = () => {
+//         this.setState({ settingsOpened: true })
+//     }
 
-    handleClickRoute = selectedRouteId => {
-        this.handleCloseDrawer()
-        this.setState({ selectedRouteId })
-    }
+//     handleCloseSettings = () => {
+//         this.setState({ settingsOpened: false })
+//     }
 
-    handleChangeFilter = event => {
-        const filterTerm = event.target.value
+//     handleOpenDrawer = () => {
+//         this.setState({ drawerOpened: true })
+//     }
 
-        const filteredRoutes = filterTerm
-            ? this.state.allRoutes.filter(
-                  item => item.uri.indexOf(filterTerm) !== -1
-              )
-            : [].concat(this.state.allRoutes)
+//     handleCloseDrawer = () => {
+//         this.setState({ drawerOpened: false })
+//     }
 
-        this.setState({ filterTerm, filteredRoutes })
-    }
+//     handleClickRoute = selectedRouteId => {
+//         this.handleCloseDrawer()
+//         this.setState({ selectedRouteId })
+//     }
 
-    render() {
-        const {
-            filterTerm,
-            filteredRoutes,
-            selectedRouteId,
-            settingsOpened,
-            drawerOpened
-        } = this.state
-        return (
-            <Fragment>
-                <div className={`${drawerClass}${drawerOpened ? " show" : ""}`}>
-                    <RoutesList
-                        handleClickRoute={this.handleClickRoute}
-                        filterTerm={filterTerm}
-                        onChangeFilter={this.handleChangeFilter}
-                        routes={filteredRoutes}
-                        selectedRouteId={selectedRouteId}
-                    />
-                </div>
-                <div
-                    className={`${overlayClass}${drawerOpened ? " show" : ""}`}
-                    onClick={this.handleCloseDrawer}
-                />
-                <Modal
-                    open={settingsOpened}
-                    onClose={this.handleCloseSettings}
-                    title="Settings"
-                >
-                    <AppSettings />
-                </Modal>
-                <TopBar
-                    handleOpenSettings={this.handleOpenSettings}
-                    handleOpenDrawer={this.handleOpenDrawer}
-                />
-                <div className="container-fluid">
-                    <RouteArea
-                        route={this.getCurrentRoute()}
-                        handleOpenDrawer={this.handleOpenDrawer}
-                    />
-                </div>
-            </Fragment>
-        )
-    }
-}
+//     handleChangeFilter = event => {
+//         const filterTerm = event.target.value
+
+//         const filteredRoutes = filterTerm
+//             ? this.state.allRoutes.filter(
+//                   item => item.uri.indexOf(filterTerm) !== -1
+//               )
+//             : [].concat(this.state.allRoutes)
+
+//         this.setState({ filterTerm, filteredRoutes })
+//     }
+
+//     render() {
+//         const {
+//             filterTerm,
+//             filteredRoutes,
+//             selectedRouteId,
+//             settingsOpened,
+//             drawerOpened
+//         } = this.state
+//         return (
+//             <Fragment>
+//                 <div className={`${drawerClass}${drawerOpened ? " show" : ""}`}>
+//                     <RoutesList
+//                         handleClickRoute={this.handleClickRoute}
+//                         filterTerm={filterTerm}
+//                         onChangeFilter={this.handleChangeFilter}
+//                         routes={filteredRoutes}
+//                         selectedRouteId={selectedRouteId}
+//                     />
+//                 </div>
+//                 <div
+//                     className={`${overlayClass}${drawerOpened ? " show" : ""}`}
+//                     onClick={this.handleCloseDrawer}
+//                 />
+//                 <Modal
+//                     open={settingsOpened}
+//                     onClose={this.handleCloseSettings}
+//                     title="Settings"
+//                 >
+//                     <AppSettings />
+//                 </Modal>
+//                 <TopBar
+//                     handleOpenSettings={this.handleOpenSettings}
+//                     handleOpenDrawer={this.handleOpenDrawer}
+//                 />
+//                 <div className="container-fluid">
+//                     <RouteArea
+//                         route={this.getCurrentRoute()}
+//                         handleOpenDrawer={this.handleOpenDrawer}
+//                     />
+//                 </div>
+//             </Fragment>
+//         )
+//     }
+// }
