@@ -1,6 +1,19 @@
 import React from "react"
+// import PropTypes from "prop-types"
+// import { Button } from "evergreen-ui"
+// import { Button } from "react-toolbox/lib/button"
+import Button from "@material-ui/core/Button"
 
-const App = () => <p>Oi</p>
+// const Button = ({ children }) => <button>{children}</button>
+// Button.propTypes = {
+//     children: PropTypes.node
+// }
+
+const App = () => (
+    <Button variant="contained" color="primary">
+        Test button
+    </Button>
+)
 
 export default App
 
