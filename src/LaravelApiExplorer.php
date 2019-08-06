@@ -27,7 +27,6 @@ class LaravelApiExplorer
 
     private function getRoutes()
     {
-        $routes = [];
         $routeCollection = Route::getRoutes();
 
         $laravelRoutes = $routeCollection->getRoutes();
@@ -99,7 +98,7 @@ class LaravelApiExplorer
         $method = null;
         $exists = true;
         $description = '';
-        $rules = [];
+        $rules = new \stdClass();
         $controller = $action['controller'] ?? null;
         if ($controller) {
 
