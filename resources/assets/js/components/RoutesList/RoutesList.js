@@ -35,6 +35,7 @@ function RoutesList({ routes, selected, onSelect }) {
                         <ListItem
                             selected={route.__id === selected}
                             onClick={() => onSelect(route.__id)}
+                            disabled={!route.exists}
                             button
                         >
                             <ListItemText
@@ -50,7 +51,17 @@ function RoutesList({ routes, selected, onSelect }) {
                                             }}
                                             className={classes.chip}
                                         />
-                                        {route.uri}
+                                        <Typography
+                                            component="span"
+                                            variant="body2"
+                                            color={
+                                                route.exists
+                                                    ? "textPrimary"
+                                                    : "error"
+                                            }
+                                        >
+                                            {route.uri}
+                                        </Typography>
                                         {route.name && (
                                             <React.Fragment>
                                                 {" "}
