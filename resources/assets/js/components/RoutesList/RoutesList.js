@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useCallback } from "react"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
 import List from "@material-ui/core/List"
@@ -7,11 +7,29 @@ import ListItemText from "@material-ui/core/ListItemText"
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import Chip from "@material-ui/core/Chip"
+import Paper from "@material-ui/core/Paper"
+import SearchIcon from "@material-ui/icons/Search"
+import IconButton from "@material-ui/core/IconButton"
+import InputBase from "@material-ui/core/InputBase"
 
 const useStyles = makeStyles(theme => ({
     chip: {
         margin: theme.spacing(1),
         background: "red"
+    },
+    input: {
+        marginLeft: 8,
+        flex: 1
+    },
+    iconButton: {
+        padding: 10
+    },
+    root: {
+        padding: "2px 4px",
+        margin: theme.spacing(2),
+        display: "flex",
+        alignItems: "center",
+        width: `calc(100% - ${theme.spacing(4)}px)`
     }
 }))
 
@@ -27,8 +45,25 @@ function getChipColor(verb) {
 
 function RoutesList({ routes, selected, onSelect }) {
     const classes = useStyles()
+    const [searchTerm, setSearchTerm] = useState("")
+    const onSearch = useCallback(
+        ({ target }) => setSearchTerm(target.value),
+        []
+    )
     return (
         <div>
+            <Paper className={classes.root}>
+                <InputBase
+                    value={searchTerm}
+                    onChange={onSearch}
+                    className={classes.input}
+                    placeholder="Search route"
+                    inputProps={{ "aria-label": "Search route" }}
+                />
+                <IconButton disabled className={classes.iconButton}>
+                    <SearchIcon />
+                </IconButton>
+            </Paper>
             <List component="nav">
                 {routes.map(route => (
                     <React.Fragment key={route.__id}>
