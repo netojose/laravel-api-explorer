@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import axios from "axios"
 import hashSum from "hash-sum"
 import Grid from "@material-ui/core/Grid"
@@ -6,6 +6,7 @@ import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import RoutesList from "../RoutesList"
+import RoutePlayground from "../RoutePlayground"
 
 function App() {
     const [data, setData] = useState({ config: [], routes: [] })
@@ -20,6 +21,14 @@ function App() {
             setData(data)
         })
     }, [])
+
+    const currentRoute = useMemo(
+        () =>
+            !selectedRoute
+                ? null
+                : data.routes.find(route => route.__id === selectedRoute),
+        [selectedRoute, data.routes]
+    )
 
     return (
         <Grid container>
@@ -38,7 +47,7 @@ function App() {
                 />
             </Grid>
             <Grid item md={9}>
-                B
+                <RoutePlayground route={currentRoute} />
             </Grid>
         </Grid>
     )
