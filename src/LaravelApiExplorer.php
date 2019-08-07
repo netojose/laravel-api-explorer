@@ -22,7 +22,9 @@ class LaravelApiExplorer
 
     public function getConfig()
     {
-        return [];
+        return [
+            'app_name' => config('app.name')
+        ];
     }
 
     private function getRoutes()
