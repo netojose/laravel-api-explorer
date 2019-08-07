@@ -6,25 +6,24 @@ import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import Chip from "@material-ui/core/Chip"
 import { makeStyles } from "@material-ui/core/styles"
+import green from "@material-ui/core/colors/green"
+import blue from "@material-ui/core/colors/blue"
+import red from "@material-ui/core/colors/red"
+import orange from "@material-ui/core/colors/orange"
+import blueGrey from "@material-ui/core/colors/blueGrey"
 
 import { route as routePropType } from "../../utils/sharedPropTypes"
 
 const useStyles = makeStyles(theme => ({
     chip: {
-        margin: theme.spacing(1),
-        background: theme.palette.error.main
-    }
+        margin: theme.spacing(1)
+    },
+    verb_GET: { background: blue[500] },
+    verb_POST: { background: green[500] },
+    verb_PUT: { background: blueGrey[500] },
+    verb_DELETE: { background: red[500] },
+    verb_PATCH: { background: orange[500] }
 }))
-
-function getChipColor(verb) {
-    return {
-        GET: "#2196f3",
-        POST: "#4caf50",
-        PUT: "#ff9800",
-        DELETE: "#f44336",
-        PATCH: "#9e9e9e"
-    }[verb]
-}
 
 function RouteListItem({ route, isSelected, onSelect }) {
     const classes = useStyles()
@@ -42,10 +41,9 @@ function RouteListItem({ route, isSelected, onSelect }) {
                             <Chip
                                 label={route.http_verb}
                                 size="small"
-                                style={{
-                                    background: getChipColor(route.http_verb)
-                                }}
-                                className={classes.chip}
+                                className={`${classes.chip} ${
+                                    classes[`verb_${route.http_verb}`]
+                                }`}
                             />
                             <Typography
                                 component="span"
