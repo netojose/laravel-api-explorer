@@ -13,8 +13,14 @@ const useStyles = makeStyles(theme => ({
     header: {
         margin: theme.spacing(1)
     },
-    button: {
+    buttonOpenDrawer: {
         float: "right"
+    },
+    buttonCloseDrawer: {
+        marginTop: theme.spacing(1)
+    },
+    drawerContent: {
+        minWidth: "25vw"
     }
 }))
 
@@ -31,14 +37,26 @@ function RoutePlayground({ route }) {
                 <Button
                     variant="outlined"
                     color="primary"
-                    className={classes.button}
+                    className={classes.buttonOpenDrawer}
                     onClick={openDrawer}
                 >
-                    See route info
+                    Route info
                 </Button>
             </Typography>
             <Drawer anchor="right" open={showDrawer} onClose={closeDrawer}>
-                <RouteInfo route={route} />
+                <Box className={classes.drawerContent}>
+                    <RouteInfo route={route} />
+                    <Typography component="p" align="center">
+                        <Button
+                            size="small"
+                            color="secondary"
+                            onClick={closeDrawer}
+                            className={classes.buttonCloseDrawer}
+                        >
+                            Close info
+                        </Button>
+                    </Typography>
+                </Box>
             </Drawer>
         </Box>
     )
