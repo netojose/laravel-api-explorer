@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
         float: "right"
     },
     buttonCloseDrawer: {
-        marginTop: theme.spacing(1)
+        margin: `${theme.spacing(1)}px 0`
     },
     drawerContent: {
         minWidth: "25vw"

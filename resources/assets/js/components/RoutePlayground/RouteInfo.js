@@ -2,6 +2,7 @@ import React, { useMemo } from "react"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
 import Box from "@material-ui/core/Box"
+import Chip from "@material-ui/core/Chip"
 import Divider from "@material-ui/core/Divider"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
@@ -22,6 +23,9 @@ const useStyles = makeStyles(theme => ({
     list: {
         width: "100%",
         backgroundColor: theme.palette.background.paper
+    },
+    chip: {
+        margin: theme.spacing(0.5)
     }
 }))
 
@@ -87,7 +91,15 @@ const TableItems = ({ title, items, emptyMsg, columnLabel, columnValue }) => {
                                 </TableCell>
                                 <TableCell align="right">
                                     {Array.isArray(items[key])
-                                        ? items[key].join(", ")
+                                        ? items[key].map(item => (
+                                              <Chip
+                                                  key={item}
+                                                  variant="outlined"
+                                                  size="small"
+                                                  label={item}
+                                                  className={classes.chip}
+                                              />
+                                          ))
                                         : items[key]}
                                 </TableCell>
                             </TableRow>
