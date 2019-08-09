@@ -3,6 +3,9 @@ import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
 import Box from "@material-ui/core/Box"
 import Chip from "@material-ui/core/Chip"
+import Tooltip from "@material-ui/core/Tooltip"
+import Avatar from "@material-ui/core/Avatar"
+import HelpIcon from "@material-ui/icons/HelpOutline"
 import Divider from "@material-ui/core/Divider"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
@@ -56,6 +59,51 @@ Item.defaultProps = {
     value: null
 }
 
+const TableCellLabel = ({ content }) => (
+    <TableCell component="th" scope="row">
+        {content}
+    </TableCell>
+)
+TableCellLabel.propTypes = {
+    content: PropTypes.string.isRequired
+}
+
+const TableCellValue = ({ content }) => {
+    const classes = useStyles()
+    const values = Array.isArray(content) ? content : [content]
+    return (
+        <TableCell align="right">
+            {values.map(value => {
+                const itemValue = value.split("\\").splice(-1, 1)[0]
+                return (
+                    <Chip
+                        key={value}
+                        avatar={
+                            itemValue === value ? null : (
+                                <Avatar>
+                                    <Tooltip title={value}>
+                                        <HelpIcon />
+                                    </Tooltip>
+                                </Avatar>
+                            )
+                        }
+                        variant="outlined"
+                        size="small"
+                        label={itemValue}
+                        className={classes.chip}
+                    />
+                )
+            })}
+        </TableCell>
+    )
+}
+TableCellValue.propTypes = {
+    content: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.arrayOf(PropTypes.string)
+    ])
+}
+
 const TableItems = ({ title, items, emptyMsg, columnLabel, columnValue }) => {
     const classes = useStyles()
     const keys = useMemo(() => Object.keys(items), [items])
@@ -86,22 +134,8 @@ const TableItems = ({ title, items, emptyMsg, columnLabel, columnValue }) => {
                     <TableBody>
                         {keys.map(key => (
                             <TableRow key={key}>
-                                <TableCell component="th" scope="row">
-                                    {key}
-                                </TableCell>
-                                <TableCell align="right">
-                                    {Array.isArray(items[key])
-                                        ? items[key].map(item => (
-                                              <Chip
-                                                  key={item}
-                                                  variant="outlined"
-                                                  size="small"
-                                                  label={item}
-                                                  className={classes.chip}
-                                              />
-                                          ))
-                                        : items[key]}
-                                </TableCell>
+                                <TableCellLabel content={key} />
+                                <TableCellValue content={items[key]} />
                             </TableRow>
                         ))}
                     </TableBody>
