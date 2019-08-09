@@ -4,6 +4,7 @@ export const route = PropTypes.shape({
     __id: PropTypes.string,
     action: PropTypes.string,
     controller: PropTypes.string,
+    request_handler: PropTypes.string,
     description: PropTypes.string,
     exists: PropTypes.bool,
     http_verb: PropTypes.oneOf(["GET", "POST", "PUT", "PATCH", "DELETE"]),

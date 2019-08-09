@@ -101,6 +101,8 @@ class LaravelApiExplorer
         $exists = true;
         $description = '';
         $rules = new \stdClass();
+        $requestClass = null;
+        $requestHandler = null;
         $controller = $action['controller'] ?? null;
         if ($controller) {
 
@@ -113,7 +115,7 @@ class LaravelApiExplorer
             $exists = class_exists($controller) && method_exists($controller, $method);
 
             if ($exists) {
-                $rules = $this->getRules($controller, $method);
+                $requestClass = $this->getRequestClass($controller, $method);
                 $description = $this->getMethodDescription($controller, $method);
             }
         }
@@ -123,6 +125,11 @@ class LaravelApiExplorer
         $httpVerb = collect($route->methods())->filter(function ($value) {
             return $value != 'HEAD';
         })->first();
+
+        if ($requestClass) {
+            $rules = $this->getRules($requestClass);
+            $requestHandler = $requestClass->name;
+        }
 
         return [
             'name' => $route->getName(),
@@ -136,6 +143,7 @@ class LaravelApiExplorer
             'middlewares' => $route->middleware(),
             'parameters' => $route->parameterNames(),
             'wheres' => $route->wheres ? $route->wheres : new \stdClass(),
+            'request_handler' => $requestHandler,
             'rules' => $rules
         ];
     }
@@ -152,10 +160,8 @@ class LaravelApiExplorer
         return (isset($found[0]) && substr($found[0], 0, 1) != '@') ? $found[0] : '';
     }
 
-    private function getRules($controller, $method)
+    private function getRequestClass($controller, $method)
     {
-        $rules = new \stdClass();
-
         $requestClass = null;
         $reflectionMethod = new ReflectionMethod($controller, $method);
         $params = $reflectionMethod->getParameters();
@@ -165,7 +171,14 @@ class LaravelApiExplorer
             $requestClass = $parameter->getClass();
         }
 
-        if ($requestClass && $requestClass->hasMethod('rules')) {
+        return $requestClass;
+    }
+
+    private function getRules($requestClass)
+    {
+        $rules = new \stdClass();
+
+        if ($requestClass->hasMethod('rules')) {
             $className = $requestClass->name;
             $reflectionMethod = new ReflectionMethod($className, 'rules');
             $allRules = $reflectionMethod->invoke(new $className());

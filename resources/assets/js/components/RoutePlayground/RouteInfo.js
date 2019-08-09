@@ -120,11 +120,12 @@ function RouteInfo({ route }) {
             <List className={classes.list} dense disablePadding>
                 <Item label="Method" value={route.http_verb} />
                 <Item label="Name" value={route.name} />
+                <Item label="Controller" value={route.controller} />
+                <Item label="Action" value={route.action} />
+                <Item label="Request handler" value={route.request_handler} />
                 <Item label="Description" value={route.description} />
                 <Item label="Path" value={route.uri} />
                 <Item label="URL" value={route.url} />
-                <Item label="Controller" value={route.controller} />
-                <Item label="Action" value={route.action} />
                 <Item
                     label="Middlewares"
                     value={route.middlewares.join(", ")}
