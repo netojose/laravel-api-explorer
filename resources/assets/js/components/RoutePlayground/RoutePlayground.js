@@ -1,15 +1,20 @@
-import React, { useState, useCallback } from "react"
-import Box from "@material-ui/core/Box"
+import React, { useState, useCallback, Fragment } from "react"
+import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
-import Drawer from "@material-ui/core/Drawer"
 import { makeStyles } from "@material-ui/core/styles"
 
 import ChipHttpVerb from "../ChipHttpVerb"
-import RouteInfo from "./RouteInfo"
+import DrawerRoute from "./DrawerRoute"
+import RequestArea from "./RequestArea"
+import ResponseArea from "./ResponseArea"
 import { route as routePropType } from "../../utils/sharedPropTypes"
 
 const useStyles = makeStyles(theme => ({
+    paper: {
+        padding: theme.spacing(1),
+        margin: theme.spacing(2)
+    },
     header: {
         margin: theme.spacing(1)
     },
@@ -28,37 +33,31 @@ function RoutePlayground({ route }) {
     const classes = useStyles()
     const [showDrawer, setShowDrawer] = useState(false)
     const openDrawer = useCallback(() => setShowDrawer(true), [])
-    const closeDrawer = useCallback(() => setShowDrawer(false), [])
+    const handlCloseDrawer = useCallback(() => setShowDrawer(false), [])
     return (
-        <Box>
-            <Typography variant="h5" className={classes.header}>
-                <ChipHttpVerb verb={route.http_verb} />
-                {route.uri}
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    className={classes.buttonOpenDrawer}
-                    onClick={openDrawer}
-                >
-                    Route info
-                </Button>
-            </Typography>
-            <Drawer anchor="right" open={showDrawer} onClose={closeDrawer}>
-                <Box className={classes.drawerContent}>
-                    <RouteInfo route={route} />
-                    <Typography component="p" align="center">
-                        <Button
-                            size="small"
-                            color="secondary"
-                            onClick={closeDrawer}
-                            className={classes.buttonCloseDrawer}
-                        >
-                            Close info
-                        </Button>
-                    </Typography>
-                </Box>
-            </Drawer>
-        </Box>
+        <Fragment>
+            <Paper className={classes.paper} elevation={0}>
+                <Typography variant="h5" className={classes.header}>
+                    <ChipHttpVerb verb={route.http_verb} />
+                    {route.uri}
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        className={classes.buttonOpenDrawer}
+                        onClick={openDrawer}
+                    >
+                        Route info
+                    </Button>
+                </Typography>
+            </Paper>
+            <RequestArea />
+            <ResponseArea />
+            <DrawerRoute
+                showDrawer={showDrawer}
+                handleCloseDrawer={handlCloseDrawer}
+                route={route}
+            />
+        </Fragment>
     )
 }
 

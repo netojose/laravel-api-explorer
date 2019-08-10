@@ -14,6 +14,9 @@ import RoutePlayground from "../RoutePlayground"
 const APPBAR_HEIGHT = "64px"
 
 const useStyles = makeStyles(theme => ({
+    playground: {
+        backgroundColor: theme.palette.background.default
+    },
     grid: {
         height: `calc(100vh - ${APPBAR_HEIGHT})`
     },
@@ -64,7 +67,7 @@ function App() {
                     onSelect={setSelectedRoute}
                 />
             </Grid>
-            <Grid item md={9}>
+            <Grid item md={9} className={classes.playground}>
                 {currentRoute ? (
                     <RoutePlayground route={currentRoute} />
                 ) : (
