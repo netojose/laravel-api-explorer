@@ -42,7 +42,7 @@ function a11yProps(index) {
     }
 }
 
-function RequestArea() {
+function RequestArea({ onMakeRequest, onCancelRequest, isRequesting }) {
     const classes = useStyles()
     const [value, setValue] = useState(0)
     const handleChange = (_, newValue) => setValue(newValue)
@@ -74,12 +74,28 @@ function RequestArea() {
             <Button
                 className={classes.button}
                 color="primary"
-                variant="contained"
+                variant="outlined"
+                onClick={onMakeRequest}
+                disabled={isRequesting}
             >
                 Make request
             </Button>
+            <Button
+                className={classes.button}
+                color="secondary"
+                variant="outlined"
+                onClick={onCancelRequest}
+                disabled={!isRequesting}
+            >
+                Cancel request
+            </Button>
         </Panel>
     )
+}
+RequestArea.propTypes = {
+    onMakeRequest: PropTypes.func.isRequired,
+    onCancelRequest: PropTypes.func.isRequired,
+    isRequesting: PropTypes.bool.isRequired
 }
 
 export default RequestArea

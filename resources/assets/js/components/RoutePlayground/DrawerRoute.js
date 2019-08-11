@@ -29,6 +29,7 @@ function DrawerRoute({ showDrawer, handleCloseDrawer, route }) {
                     <Button
                         size="small"
                         color="secondary"
+                        variant="outlined"
                         onClick={handleCloseDrawer}
                         className={classes.buttonCloseDrawer}
                     >

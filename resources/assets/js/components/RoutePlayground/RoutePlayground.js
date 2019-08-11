@@ -1,8 +1,9 @@
-import React, { useState, useCallback, Fragment } from "react"
+import React, { useState, useEffect, useCallback, Fragment } from "react"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles"
+import axios from "axios"
 
 import ChipHttpVerb from "../ChipHttpVerb"
 import DrawerRoute from "./DrawerRoute"
@@ -31,9 +32,40 @@ const useStyles = makeStyles(theme => ({
 
 function RoutePlayground({ route }) {
     const classes = useStyles()
+    const [source, setSource] = useState(null)
+    const [response, setResponse] = useState(null)
     const [showDrawer, setShowDrawer] = useState(false)
+    const [isRequesting, setIsRequesting] = useState(false)
     const openDrawer = useCallback(() => setShowDrawer(true), [])
     const handlCloseDrawer = useCallback(() => setShowDrawer(false), [])
+
+    const handleMakeRequest = useCallback(() => {
+        setIsRequesting(true)
+        const sourceToken = axios.CancelToken.source()
+        setSource(sourceToken)
+        axios({
+            method: route.http_verb.toLowerCase(),
+            url: route.url,
+            cancelToken: sourceToken.token
+        })
+            .then(response => {
+                setResponse(response)
+                setIsRequesting(false)
+            })
+            .catch(() => {
+                setIsRequesting(false)
+            })
+    }, [route])
+
+    const handleCancelRequest = useCallback(() => {
+        source && source.cancel()
+    }, [source])
+
+    useEffect(() => {
+        setIsRequesting(false)
+        source && source.cancel()
+    }, [route])
+
     return (
         <Fragment>
             <Paper className={classes.paper} elevation={0}>
@@ -50,8 +82,12 @@ function RoutePlayground({ route }) {
                     </Button>
                 </Typography>
             </Paper>
-            <RequestArea />
-            <ResponseArea />
+            <RequestArea
+                onMakeRequest={handleMakeRequest}
+                onCancelRequest={handleCancelRequest}
+                isRequesting={isRequesting}
+            />
+            <ResponseArea response={response} isRequesting={isRequesting} />
             <DrawerRoute
                 showDrawer={showDrawer}
                 handleCloseDrawer={handlCloseDrawer}
