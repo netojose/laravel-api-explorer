@@ -1,29 +1,23 @@
 import React from "react"
 import PropTypes from "prop-types"
-import Paper from "@material-ui/core/Paper"
-import Typography from "@material-ui/core/Typography"
+import Card from "@material-ui/core/Card"
+import CardHeader from "@material-ui/core/CardHeader"
+import CardContent from "@material-ui/core/CardContent"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
-        backgroundColor: theme.palette.background.paper,
         margin: theme.spacing(2)
-    },
-    header: {
-        padding: theme.spacing(1, 2),
-        backgroundColor: theme.palette.background.default
     }
 }))
 
 function Panel({ title, children }) {
     const classes = useStyles()
     return (
-        <Paper className={classes.wrapper}>
-            <Typography variant="h6" className={classes.header}>
-                {title}
-            </Typography>
-            {children}
-        </Paper>
+        <Card className={classes.wrapper}>
+            <CardHeader title={title} />
+            <CardContent>{children}</CardContent>
+        </Card>
     )
 }
 Panel.propTypes = {
