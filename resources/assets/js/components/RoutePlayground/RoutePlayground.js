@@ -66,6 +66,8 @@ function RoutePlayground({ route }) {
         source && source.cancel()
     }, [route])
 
+    useEffect(() => () => source && source.cancel(), [])
+
     return (
         <Fragment>
             <Paper className={classes.paper} elevation={0}>

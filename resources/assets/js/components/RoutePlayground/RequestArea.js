@@ -1,11 +1,10 @@
-import React, { useState } from "react"
+import React, { Fragment, useState } from "react"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
 import Box from "@material-ui/core/Box"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import Button from "@material-ui/core/Button"
-import Divider from "@material-ui/core/Divider"
 
 import Panel from "./Panel"
 
@@ -47,7 +46,31 @@ function RequestArea({ onMakeRequest, onCancelRequest, isRequesting }) {
     const [value, setValue] = useState(0)
     const handleChange = (_, newValue) => setValue(newValue)
     return (
-        <Panel title="Request">
+        <Panel
+            title="Request"
+            actions={
+                <Fragment>
+                    <Button
+                        className={classes.button}
+                        color="primary"
+                        variant="outlined"
+                        onClick={onMakeRequest}
+                        disabled={isRequesting}
+                    >
+                        Make request
+                    </Button>
+                    <Button
+                        className={classes.button}
+                        color="secondary"
+                        variant="outlined"
+                        onClick={onCancelRequest}
+                        disabled={!isRequesting}
+                    >
+                        Cancel request
+                    </Button>
+                </Fragment>
+            }
+        >
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -70,25 +93,6 @@ function RequestArea({ onMakeRequest, onCancelRequest, isRequesting }) {
             <TabPanel value={value} index={3}>
                 Headers
             </TabPanel>
-            <Divider />
-            <Button
-                className={classes.button}
-                color="primary"
-                variant="outlined"
-                onClick={onMakeRequest}
-                disabled={isRequesting}
-            >
-                Make request
-            </Button>
-            <Button
-                className={classes.button}
-                color="secondary"
-                variant="outlined"
-                onClick={onCancelRequest}
-                disabled={!isRequesting}
-            >
-                Cancel request
-            </Button>
         </Panel>
     )
 }
