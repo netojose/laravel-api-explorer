@@ -29,6 +29,9 @@ const useStyles = makeStyles(theme => ({
     },
     chip: {
         margin: theme.spacing(0.5)
+    },
+    avatar: {
+        background: "transparent"
     }
 }))
 
@@ -78,19 +81,19 @@ const TableCellValue = ({ content }) => {
                 return (
                     <Chip
                         key={value}
+                        size="small"
+                        variant="outlined"
+                        label={itemValue}
+                        className={classes.chip}
                         avatar={
                             itemValue === value ? null : (
-                                <Avatar>
+                                <Avatar className={classes.avatar}>
                                     <Tooltip title={value}>
                                         <HelpIcon />
                                     </Tooltip>
                                 </Avatar>
                             )
                         }
-                        variant="outlined"
-                        size="small"
-                        label={itemValue}
-                        className={classes.chip}
                     />
                 )
             })}
