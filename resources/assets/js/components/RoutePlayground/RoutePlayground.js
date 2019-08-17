@@ -33,6 +33,23 @@ const format = {
     headers: () => []
 }
 
+function formatUrl(url, parameters) {
+    const urlParams = url.match(/\{(.*?)\}/g)
+
+    if (!Array.isArray(urlParams)) {
+        return url
+    }
+
+    let formatedUrl = url
+    urlParams.forEach(param => {
+        const key = param.match(/[a-zA-Z0-9_.]/g).join("")
+        const parameter = parameters.find(p => p.key === key)
+        const value = parameter ? parameter.value : ""
+        formatedUrl = formatedUrl.replace(param, value)
+    })
+    return formatedUrl
+}
+
 const useStyles = makeStyles(theme => ({
     paper: {
         padding: theme.spacing(1),
@@ -97,7 +114,7 @@ function RoutePlayground({ route }) {
         setSource(sourceToken)
         axios({
             method: route.http_verb.toLowerCase(),
-            url: route.url,
+            url: formatUrl(route.url, parameters),
             cancelToken: sourceToken.token
         })
             .then(response => {
@@ -107,7 +124,7 @@ function RoutePlayground({ route }) {
             .catch(() => {
                 setIsRequesting(false)
             })
-    }, [route])
+    }, [route, parameters])
 
     const handleCancelRequest = useCallback(() => {
         source && source.cancel()
