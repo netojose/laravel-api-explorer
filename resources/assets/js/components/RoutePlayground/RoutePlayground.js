@@ -61,6 +61,13 @@ function formatParams(params) {
     )
 }
 
+function formatHeaders(params) {
+    return params.reduce(
+        (acc, curr) => ({ ...acc, [curr.name]: curr.value }),
+        {}
+    )
+}
+
 const useStyles = makeStyles(theme => ({
     paper: {
         padding: theme.spacing(1),
@@ -151,6 +158,7 @@ function RoutePlayground({ route }) {
             method: route.http_verb.toLowerCase(),
             url: formatUrl(route.url, parameters),
             params: formatParams(queryStrings),
+            headers: formatHeaders(headers),
             cancelToken: sourceToken.token
         })
             .then(response => {
@@ -160,7 +168,7 @@ function RoutePlayground({ route }) {
             .catch(() => {
                 setIsRequesting(false)
             })
-    }, [route, parameters, queryStrings])
+    }, [route, parameters, queryStrings, headers])
 
     const handleCancelRequest = useCallback(() => {
         source && source.cancel()
