@@ -22,13 +22,13 @@ export function getStoredRouteConfig(routeId) {
     }
 }
 
-export function storeRouteConfigItem(routeId, type, key, value) {
+export function storeRouteConfigItem(routeId, type, id, name, value) {
     const routeConfig = getStoredRouteConfig(routeId)
-    const exists = routeConfig[type].find(item => item.key === key)
-    const updateItem = item => (item.key === key ? { ...item, value } : item)
+    const exists = routeConfig[type].find(item => item.__id === id)
+    const updateItem = item => (item.__id === id ? { ...item, value } : item)
     const newItemValue = exists
         ? routeConfig[type].map(updateItem)
-        : [...routeConfig[type], { key, value }]
+        : [...routeConfig[type], { __id: id, name, value }]
     const newConfigValue = { ...routeConfig, [type]: newItemValue }
     const configKey = getKey(routeId)
     window.localStorage.setItem(configKey, JSON.stringify(newConfigValue))

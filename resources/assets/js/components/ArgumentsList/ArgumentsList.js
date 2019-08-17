@@ -1,6 +1,7 @@
 import React, { Fragment } from "react"
 import PropTypes from "prop-types"
 import Box from "@material-ui/core/Box"
+import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
 import Input from "@material-ui/core/Input"
 import InputAdornment from "@material-ui/core/InputAdornment"
@@ -11,25 +12,28 @@ import { makeStyles } from "@material-ui/core/styles"
 
 import { argumentsList as argumentsListPropTypes } from "../../utils/sharedPropTypes"
 
-const useStyles = makeStyles(() => ({
-    inputKey: {
+const useStyles = makeStyles(theme => ({
+    inputName: {
         marginTop: 10
+    },
+    buttonAddItem: {
+        marginTop: theme.spacing(1)
     }
 }))
 
-function ArgumentsList({ items, onChangeValue }) {
+function ArgumentsList({ items, enabledAddArgument, onChangeValue }) {
     const classes = useStyles()
     return (
         <Box>
             {items.map(item => (
-                <Grid key={item.key} container spacing={3}>
+                <Grid key={item.name} container spacing={3}>
                     <Grid item xs={3}>
                         <Input
                             fullWidth
-                            placeholder={item.key}
-                            disabled={item.disabledKey}
-                            value={item.key}
-                            className={classes.inputKey}
+                            placeholder={item.name}
+                            disabled={item.disabledName}
+                            value={item.name}
+                            className={classes.inputName}
                             inputProps={{
                                 "aria-label": "description"
                             }}
@@ -40,7 +44,8 @@ function ArgumentsList({ items, onChangeValue }) {
                             fullWidth
                             placeholder={item.placeholderValue || "Value"}
                             disabled={item.disabledValue}
-                            name={item.key}
+                            id={item.__id}
+                            name={item.name}
                             value={item.value}
                             onChange={onChangeValue}
                             inputProps={{
@@ -68,12 +73,25 @@ function ArgumentsList({ items, onChangeValue }) {
                     </Grid>
                 </Grid>
             ))}
+            <Button
+                variant="outlined"
+                color="primary"
+                className={classes.buttonAddItem}
+                onClick={() => null}
+                disabled={!enabledAddArgument}
+            >
+                Add item
+            </Button>
         </Box>
     )
 }
+ArgumentsList.defaultProps = {
+    enabledAddArgument: true
+}
 ArgumentsList.propTypes = {
     items: argumentsListPropTypes.isRequired,
-    onChangeValue: PropTypes.func.isRequired
+    onChangeValue: PropTypes.func.isRequired,
+    enabledAddArgument: PropTypes.bool
 }
 
 export default ArgumentsList

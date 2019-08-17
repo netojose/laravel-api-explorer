@@ -103,6 +103,7 @@ function RequestArea({
                 <ArgumentsList
                     items={parameters}
                     onChangeValue={handleChangeParameter}
+                    enabledAddArgument={false}
                 />
             </TabPanel>
             <TabPanel value={currentTab} index={2}>

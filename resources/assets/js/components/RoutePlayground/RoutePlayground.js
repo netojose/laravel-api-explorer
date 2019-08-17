@@ -20,12 +20,13 @@ import { getStoredRouteConfig, storeRouteConfigItem } from "../../utils/storage"
 
 const format = {
     parameters: (route, stored) =>
-        route.parameters.map(key => {
-            const current = stored.find(item => item.key === key)
+        route.parameters.map(name => {
+            const current = stored.find(item => item.name === name)
             return {
-                key,
-                disabledKey: true,
-                placeholderValue: route.wheres[key],
+                __id: current ? current.__id : `id_${window.performance.now()}`,
+                name,
+                disabledName: true,
+                placeholderValue: route.wheres[name],
                 value: current ? current.value : ""
             }
         }),
@@ -42,8 +43,8 @@ function formatUrl(url, parameters) {
 
     let formatedUrl = url
     urlParams.forEach(param => {
-        const key = param.match(/[a-zA-Z0-9_.]/g).join("")
-        const parameter = parameters.find(p => p.key === key)
+        const name = param.match(/[a-zA-Z0-9_.]/g).join("")
+        const parameter = parameters.find(p => p.name === name)
         const value = parameter ? parameter.value : ""
         formatedUrl = formatedUrl.replace(param, value)
     })
@@ -100,8 +101,8 @@ function RoutePlayground({ route }) {
     const handlCloseDrawer = useCallback(() => setShowDrawer(false), [])
 
     const handleEditArgument = useCallback(
-        (type, { target: { name, value } }) => {
-            storeRouteConfigItem(route.__id, type, name, value)
+        (type, { target: { id, name, value } }) => {
+            storeRouteConfigItem(route.__id, type, id, name, value)
             const stored = getStoredRouteConfig(route.__id)
             setState[type](format[type](route, stored.parameters))
         },
