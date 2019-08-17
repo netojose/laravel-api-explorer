@@ -7,6 +7,8 @@ import Tab from "@material-ui/core/Tab"
 import Button from "@material-ui/core/Button"
 
 import Panel from "./Panel"
+import ArgumentsList from "../ArgumentsList"
+import { argumentsList as argumentsListPropTypes } from "../../utils/sharedPropTypes"
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -41,10 +43,23 @@ function a11yProps(index) {
     }
 }
 
-function RequestArea({ onMakeRequest, onCancelRequest, isRequesting }) {
+function RequestArea({
+    onMakeRequest,
+    onCancelRequest,
+    isRequesting,
+    parameters,
+    queryStrings,
+    headers,
+    onEditArgument
+}) {
     const classes = useStyles()
-    const [value, setValue] = useState(0)
-    const handleChange = (_, newValue) => setValue(newValue)
+    const [currentTab, setCurrentTab] = useState(0)
+    const handleChangeTab = (_, newValue) => setCurrentTab(newValue)
+
+    const handleChangeParameter = e => onEditArgument("parameters", e)
+    const handleChangeQuerystring = e => onEditArgument("queryStrings", e)
+    const handleChangeHeader = e => onEditArgument("headers", e)
+
     return (
         <Panel
             title="Request"
@@ -72,8 +87,8 @@ function RequestArea({ onMakeRequest, onCancelRequest, isRequesting }) {
             }
         >
             <Tabs
-                value={value}
-                onChange={handleChange}
+                value={currentTab}
+                onChange={handleChangeTab}
                 aria-label="simple tabs example"
             >
                 <Tab label="Body" {...a11yProps(0)} />
@@ -81,17 +96,26 @@ function RequestArea({ onMakeRequest, onCancelRequest, isRequesting }) {
                 <Tab label="Query string" {...a11yProps(2)} />
                 <Tab label="Headers" {...a11yProps(3)} />
             </Tabs>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={currentTab} index={0}>
                 Body
             </TabPanel>
-            <TabPanel value={value} index={1}>
-                Route parameters
+            <TabPanel value={currentTab} index={1}>
+                <ArgumentsList
+                    items={parameters}
+                    onChangeValue={handleChangeParameter}
+                />
             </TabPanel>
-            <TabPanel value={value} index={2}>
-                Query string
+            <TabPanel value={currentTab} index={2}>
+                <ArgumentsList
+                    items={queryStrings}
+                    onChangeValue={handleChangeQuerystring}
+                />
             </TabPanel>
-            <TabPanel value={value} index={3}>
-                Headers
+            <TabPanel value={currentTab} index={3}>
+                <ArgumentsList
+                    items={headers}
+                    onChangeValue={handleChangeHeader}
+                />
             </TabPanel>
         </Panel>
     )
@@ -99,7 +123,11 @@ function RequestArea({ onMakeRequest, onCancelRequest, isRequesting }) {
 RequestArea.propTypes = {
     onMakeRequest: PropTypes.func.isRequired,
     onCancelRequest: PropTypes.func.isRequired,
-    isRequesting: PropTypes.bool.isRequired
+    isRequesting: PropTypes.bool.isRequired,
+    parameters: argumentsListPropTypes.isRequired,
+    queryStrings: argumentsListPropTypes.isRequired,
+    headers: argumentsListPropTypes.isRequired,
+    onEditArgument: PropTypes.func.isRequired
 }
 
 export default RequestArea

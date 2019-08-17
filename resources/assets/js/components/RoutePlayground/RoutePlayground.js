@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, Fragment } from "react"
+import React, {
+    Fragment,
+    useState,
+    useEffect,
+    useCallback,
+    useMemo
+} from "react"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
@@ -10,6 +16,22 @@ import DrawerRoute from "./DrawerRoute"
 import RequestArea from "./RequestArea"
 import ResponseArea from "./ResponseArea"
 import { route as routePropType } from "../../utils/sharedPropTypes"
+import { getStoredRouteConfig, storeRouteConfigItem } from "../../utils/storage"
+
+const format = {
+    parameters: (route, stored) =>
+        route.parameters.map(key => {
+            const current = stored.find(item => item.key === key)
+            return {
+                key,
+                disabledKey: true,
+                placeholderValue: route.wheres[key],
+                value: current ? current.value : ""
+            }
+        }),
+    queryStrings: () => [],
+    headers: () => []
+}
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -33,11 +55,41 @@ const useStyles = makeStyles(theme => ({
 function RoutePlayground({ route }) {
     const classes = useStyles()
     const [source, setSource] = useState(null)
-    const [response, setResponse] = useState(null)
+    const [responses, setResponse] = useState({})
     const [showDrawer, setShowDrawer] = useState(false)
     const [isRequesting, setIsRequesting] = useState(false)
+
+    const [parameters, setParameters] = useState([])
+    const [queryStrings, setQueryStrings] = useState([])
+    const [headers, setHeaders] = useState([])
+
+    const setState = useMemo(
+        () => ({
+            parameters: setParameters,
+            queryStrings: setQueryStrings,
+            headers: setHeaders
+        }),
+        [route]
+    )
+
+    useEffect(() => {
+        const stored = getStoredRouteConfig(route.__id)
+        setState.parameters(format.parameters(route, stored.parameters))
+        setState.queryStrings(format.queryStrings(route, stored.queryStrings))
+        setState.headers(format.headers(route, stored.headers))
+    }, [route])
+
     const openDrawer = useCallback(() => setShowDrawer(true), [])
     const handlCloseDrawer = useCallback(() => setShowDrawer(false), [])
+
+    const handleEditArgument = useCallback(
+        (type, { target: { name, value } }) => {
+            storeRouteConfigItem(route.__id, type, name, value)
+            const stored = getStoredRouteConfig(route.__id)
+            setState[type](format[type](route, stored.parameters))
+        },
+        [route]
+    )
 
     const handleMakeRequest = useCallback(() => {
         setIsRequesting(true)
@@ -49,7 +101,7 @@ function RoutePlayground({ route }) {
             cancelToken: sourceToken.token
         })
             .then(response => {
-                setResponse(response)
+                setResponse({ ...responses, [route.__id]: response })
                 setIsRequesting(false)
             })
             .catch(() => {
@@ -87,9 +139,16 @@ function RoutePlayground({ route }) {
             <RequestArea
                 onMakeRequest={handleMakeRequest}
                 onCancelRequest={handleCancelRequest}
+                onEditArgument={handleEditArgument}
+                isRequesting={isRequesting}
+                parameters={parameters}
+                queryStrings={queryStrings}
+                headers={headers}
+            />
+            <ResponseArea
+                response={responses[route.__id]}
                 isRequesting={isRequesting}
             />
-            <ResponseArea response={response} isRequesting={isRequesting} />
             <DrawerRoute
                 showDrawer={showDrawer}
                 handleCloseDrawer={handlCloseDrawer}

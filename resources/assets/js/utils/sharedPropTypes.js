@@ -16,3 +16,12 @@ export const route = PropTypes.shape({
     url: PropTypes.string,
     wheres: PropTypes.object
 })
+
+export const argumentsList = PropTypes.arrayOf(
+    PropTypes.shape({
+        key: PropTypes.string.isRequired,
+        disabledKey: PropTypes.bool,
+        placeholderValue: PropTypes.string,
+        value: PropTypes.string.isRequired
+    })
+)
