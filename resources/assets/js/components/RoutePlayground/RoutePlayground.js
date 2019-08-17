@@ -16,22 +16,25 @@ import DrawerRoute from "./DrawerRoute"
 import RequestArea from "./RequestArea"
 import ResponseArea from "./ResponseArea"
 import { route as routePropType } from "../../utils/sharedPropTypes"
-import { getStoredRouteConfig, storeRouteConfigItem } from "../../utils/storage"
+import {
+    getRouteConfig,
+    updateRouteConfigItem,
+    addRouteConfigItem
+} from "../../utils/storage"
+
+function generateFieldId() {
+    return `field_${window.performance.now()}`
+}
 
 const format = {
     parameters: (route, stored) =>
-        route.parameters.map(name => {
-            const current = stored.find(item => item.name === name)
-            return {
-                __id: current ? current.__id : `id_${window.performance.now()}`,
-                name,
-                disabledName: true,
-                placeholderValue: route.wheres[name],
-                value: current ? current.value : ""
-            }
-        }),
-    queryStrings: () => [],
-    headers: () => []
+        stored.map(item => ({
+            ...item,
+            disabledName: true,
+            placeholderValue: route.wheres[name]
+        })),
+    queryStrings: (route, stored) => stored,
+    headers: (route, stored) => stored
 }
 
 function formatUrl(url, parameters) {
@@ -91,7 +94,20 @@ function RoutePlayground({ route }) {
     )
 
     useEffect(() => {
-        const stored = getStoredRouteConfig(route.__id)
+        const stored = getRouteConfig(route.__id)
+        route.parameters
+            .filter(p => !stored.parameters.includes(p))
+            .forEach(param => {
+                addRouteConfigItem(route.__id, "parameters", {
+                    __id: generateFieldId(),
+                    name: param,
+                    value: ""
+                })
+            })
+    }, [route])
+
+    useEffect(() => {
+        const stored = getRouteConfig(route.__id)
         setState.parameters(format.parameters(route, stored.parameters))
         setState.queryStrings(format.queryStrings(route, stored.queryStrings))
         setState.headers(format.headers(route, stored.headers))
@@ -101,10 +117,21 @@ function RoutePlayground({ route }) {
     const handlCloseDrawer = useCallback(() => setShowDrawer(false), [])
 
     const handleEditArgument = useCallback(
-        (type, { target: { id, name, value } }) => {
-            storeRouteConfigItem(route.__id, type, id, name, value)
-            const stored = getStoredRouteConfig(route.__id)
-            setState[type](format[type](route, stored.parameters))
+        (type, field, id, value) => {
+            updateRouteConfigItem(route.__id, type, id, field, value)
+            const stored = getRouteConfig(route.__id)
+            setState[type](format[type](route, stored[type]))
+        },
+        [route]
+    )
+
+    const handleAddArgument = useCallback(
+        type => {
+            addRouteConfigItem(route.__id, type, {
+                __id: generateFieldId()
+            })
+            const stored = getRouteConfig(route.__id)
+            setState[type](format[type](route, stored[type]))
         },
         [route]
     )
@@ -157,6 +184,7 @@ function RoutePlayground({ route }) {
             <RequestArea
                 onMakeRequest={handleMakeRequest}
                 onCancelRequest={handleCancelRequest}
+                onAddArgument={handleAddArgument}
                 onEditArgument={handleEditArgument}
                 isRequesting={isRequesting}
                 parameters={parameters}

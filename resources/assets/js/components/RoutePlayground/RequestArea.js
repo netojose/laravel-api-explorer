@@ -50,15 +50,28 @@ function RequestArea({
     parameters,
     queryStrings,
     headers,
-    onEditArgument
+    onEditArgument,
+    onAddArgument
 }) {
     const classes = useStyles()
     const [currentTab, setCurrentTab] = useState(0)
     const handleChangeTab = (_, newValue) => setCurrentTab(newValue)
 
-    const handleChangeParameter = e => onEditArgument("parameters", e)
-    const handleChangeQuerystring = e => onEditArgument("queryStrings", e)
-    const handleChangeHeader = e => onEditArgument("headers", e)
+    const handleChangeParameterValue = (id, value) =>
+        onEditArgument("parameters", "value", id, value)
+
+    const handleChangeHeaderName = (id, value) =>
+        onEditArgument("headers", "name", id, value)
+    const handleChangeHeaderValue = (id, value) =>
+        onEditArgument("headers", "value", id, value)
+
+    const handleChangeQSName = (id, value) =>
+        onEditArgument("queryStrings", "name", id, value)
+    const handleChangeQSValue = (id, value) =>
+        onEditArgument("queryStrings", "value", id, value)
+
+    const handleAddArgumentQueryString = () => onAddArgument("queryStrings")
+    const handleAddArgumentHeader = () => onAddArgument("headers")
 
     return (
         <Panel
@@ -102,20 +115,24 @@ function RequestArea({
             <TabPanel value={currentTab} index={1}>
                 <ArgumentsList
                     items={parameters}
-                    onChangeValue={handleChangeParameter}
+                    onChangeValue={handleChangeParameterValue}
                     enabledAddArgument={false}
                 />
             </TabPanel>
             <TabPanel value={currentTab} index={2}>
                 <ArgumentsList
                     items={queryStrings}
-                    onChangeValue={handleChangeQuerystring}
+                    onChangeName={handleChangeQSName}
+                    onChangeValue={handleChangeQSValue}
+                    onAddArgument={handleAddArgumentQueryString}
                 />
             </TabPanel>
             <TabPanel value={currentTab} index={3}>
                 <ArgumentsList
                     items={headers}
-                    onChangeValue={handleChangeHeader}
+                    onChangeName={handleChangeHeaderName}
+                    onChangeValue={handleChangeHeaderValue}
+                    onAddArgument={handleAddArgumentHeader}
                 />
             </TabPanel>
         </Panel>
@@ -128,7 +145,8 @@ RequestArea.propTypes = {
     parameters: argumentsListPropTypes.isRequired,
     queryStrings: argumentsListPropTypes.isRequired,
     headers: argumentsListPropTypes.isRequired,
-    onEditArgument: PropTypes.func.isRequired
+    onEditArgument: PropTypes.func.isRequired,
+    onAddArgument: PropTypes.func.isRequired
 }
 
 export default RequestArea

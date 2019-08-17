@@ -21,18 +21,27 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function ArgumentsList({ items, enabledAddArgument, onChangeValue }) {
+function ArgumentsList({
+    items,
+    enabledAddArgument,
+    onChangeValue,
+    onChangeName,
+    onAddArgument
+}) {
     const classes = useStyles()
     return (
         <Box>
             {items.map(item => (
-                <Grid key={item.name} container spacing={3}>
+                <Grid key={item.__id} container spacing={3}>
                     <Grid item xs={3}>
                         <Input
                             fullWidth
                             placeholder={item.name}
                             disabled={item.disabledName}
                             value={item.name}
+                            onChange={e =>
+                                onChangeName(item.__id, e.target.value)
+                            }
                             className={classes.inputName}
                             inputProps={{
                                 "aria-label": "description"
@@ -47,7 +56,9 @@ function ArgumentsList({ items, enabledAddArgument, onChangeValue }) {
                             id={item.__id}
                             name={item.name}
                             value={item.value}
-                            onChange={onChangeValue}
+                            onChange={e =>
+                                onChangeValue(item.__id, e.target.value)
+                            }
                             inputProps={{
                                 "aria-label": "description"
                             }}
@@ -77,7 +88,7 @@ function ArgumentsList({ items, enabledAddArgument, onChangeValue }) {
                 variant="outlined"
                 color="primary"
                 className={classes.buttonAddItem}
-                onClick={() => null}
+                onClick={onAddArgument}
                 disabled={!enabledAddArgument}
             >
                 Add item
@@ -86,11 +97,15 @@ function ArgumentsList({ items, enabledAddArgument, onChangeValue }) {
     )
 }
 ArgumentsList.defaultProps = {
-    enabledAddArgument: true
+    enabledAddArgument: true,
+    onAddArgument: () => undefined,
+    onChangeName: () => undefined
 }
 ArgumentsList.propTypes = {
     items: argumentsListPropTypes.isRequired,
     onChangeValue: PropTypes.func.isRequired,
+    onChangeName: PropTypes.func,
+    onAddArgument: PropTypes.func,
     enabledAddArgument: PropTypes.bool
 }
 
