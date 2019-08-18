@@ -5,6 +5,7 @@ import CircularProgress from "@material-ui/core/CircularProgress"
 import { makeStyles } from "@material-ui/core/styles"
 
 import Panel from "./Panel"
+import JsonViewer from "./JsonViewer"
 
 const useStyles = makeStyles(theme => ({
     text: {
@@ -32,7 +33,7 @@ function ResponseArea({ response, isRequesting }) {
 
             {isRequesting && <CircularProgress className={classes.progress} />}
 
-            {response && <pre>{JSON.stringify(response, null, 4)}</pre>}
+            {response && <JsonViewer content={response} />}
         </Panel>
     )
 }
