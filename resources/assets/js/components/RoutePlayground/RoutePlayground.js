@@ -170,6 +170,7 @@ function RoutePlayground({ route }) {
             url: formatUrl(route.url, parameters),
             params: formatArguments(queryStrings),
             headers: formatArguments(headers),
+            data: body,
             cancelToken: sourceToken.token
         })
             .then(response => {
@@ -179,7 +180,7 @@ function RoutePlayground({ route }) {
             .catch(() => {
                 setIsRequesting(false)
             })
-    }, [route.__id, parameters, queryStrings, headers])
+    }, [route.__id, parameters, queryStrings, headers, body])
 
     const handleCancelRequest = useCallback(() => {
         source && source.cancel()
