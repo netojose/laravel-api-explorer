@@ -171,7 +171,10 @@ function RoutePlayground({ route }) {
             params: formatArguments(queryStrings),
             headers: formatArguments(headers),
             data: body,
-            cancelToken: sourceToken.token
+            cancelToken: sourceToken.token,
+            validateStatus: function() {
+                return true
+            }
         })
             .then(response => {
                 setResponse({ ...responses, [route.__id]: response })
