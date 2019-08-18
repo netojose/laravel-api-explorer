@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button"
 
 import Panel from "./Panel"
 import ArgumentsList from "../ArgumentsList"
+import JsonEditor from "./JsonEditor"
 import { argumentsList as argumentsListPropTypes } from "../../utils/sharedPropTypes"
 
 const useStyles = makeStyles(theme => ({
@@ -46,6 +47,7 @@ function a11yProps(index) {
 function RequestArea({
     onMakeRequest,
     onCancelRequest,
+    onChangeJsonBody,
     isRequesting,
     parameters,
     queryStrings,
@@ -104,20 +106,20 @@ function RequestArea({
                 onChange={handleChangeTab}
                 aria-label="simple tabs example"
             >
-                <Tab label="Body" {...a11yProps(0)} />
-                <Tab label="Route parameters" {...a11yProps(1)} />
+                <Tab label="Route parameters" {...a11yProps(0)} />
+                <Tab label="Body" {...a11yProps(1)} />
                 <Tab label="Query string" {...a11yProps(2)} />
                 <Tab label="Headers" {...a11yProps(3)} />
             </Tabs>
             <TabPanel value={currentTab} index={0}>
-                Body
-            </TabPanel>
-            <TabPanel value={currentTab} index={1}>
                 <ArgumentsList
                     items={parameters}
                     onChangeValue={handleChangeParameterValue}
                     enabledAddArgument={false}
                 />
+            </TabPanel>
+            <TabPanel value={currentTab} index={1}>
+                <JsonEditor initialContent={{}} onChange={onChangeJsonBody} />
             </TabPanel>
             <TabPanel value={currentTab} index={2}>
                 <ArgumentsList
@@ -141,6 +143,7 @@ function RequestArea({
 RequestArea.propTypes = {
     onMakeRequest: PropTypes.func.isRequired,
     onCancelRequest: PropTypes.func.isRequired,
+    onChangeJsonBody: PropTypes.func.isRequired,
     isRequesting: PropTypes.bool.isRequired,
     parameters: argumentsListPropTypes.isRequired,
     queryStrings: argumentsListPropTypes.isRequired,

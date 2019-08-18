@@ -2,7 +2,7 @@ function getKey(routeId) {
     return `routeConfig:${routeId}`
 }
 
-export function getRouteConfig(routeId) {
+export function getRouteArguments(routeId) {
     const key = getKey(routeId)
     const config = window.localStorage.getItem(key)
     const defaultConfig = {
@@ -22,8 +22,8 @@ export function getRouteConfig(routeId) {
     }
 }
 
-export function addRouteConfigItem(routeId, type, params) {
-    const routeConfig = getRouteConfig(routeId)
+export function addRouteArgumentItem(routeId, type, params) {
+    const routeConfig = getRouteArguments(routeId)
     const newItemValue = [
         ...routeConfig[type],
         { name: "", value: "", ...params }
@@ -31,8 +31,8 @@ export function addRouteConfigItem(routeId, type, params) {
     persist(routeId, routeConfig, type, newItemValue)
 }
 
-export function updateRouteConfigItem(routeId, type, itemId, field, value) {
-    const routeConfig = getRouteConfig(routeId)
+export function updateRouteArgumentItem(routeId, type, itemId, field, value) {
+    const routeConfig = getRouteArguments(routeId)
     const updateItem = item =>
         item.__id === itemId ? { ...item, [field]: value } : item
     const newItemValue = routeConfig[type].map(updateItem)

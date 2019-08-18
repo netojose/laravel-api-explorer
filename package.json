@@ -23,9 +23,10 @@
         "eslint-plugin-babel": "^5.3.0",
         "eslint-plugin-react": "^7.14.3",
         "hash-sum": "^1.0.2",
+        "jsoneditor": "^6.3.0",
         "prop-types": "^15.7.2",
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6"
+        "react": "^16.9.0",
+        "react-dom": "^16.9.0"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
@@ -34,8 +35,11 @@
         "@babel/preset-env": "^7.5.5",
         "@babel/preset-react": "^7.0.0",
         "babel-loader": "^8.0.6",
+        "css-loader": "^3.2.0",
         "eslint": "^6.1.0",
         "eslint-plugin-react-hooks": "^1.6.1",
+        "style-loader": "^1.0.0",
+        "svg-url-loader": "^3.0.0",
         "webpack": "^4.39.1",
         "webpack-cli": "^3.3.6"
     }

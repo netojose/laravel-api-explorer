@@ -17,9 +17,9 @@ import RequestArea from "./RequestArea"
 import ResponseArea from "./ResponseArea"
 import { route as routePropType } from "../../utils/sharedPropTypes"
 import {
-    getRouteConfig,
-    updateRouteConfigItem,
-    addRouteConfigItem
+    getRouteArguments,
+    updateRouteArgumentItem,
+    addRouteArgumentItem
 } from "../../utils/storage"
 
 function generateFieldId() {
@@ -54,14 +54,7 @@ function formatUrl(url, parameters) {
     return formatedUrl
 }
 
-function formatParams(params) {
-    return params.reduce(
-        (acc, curr) => ({ ...acc, [curr.name]: curr.value }),
-        {}
-    )
-}
-
-function formatHeaders(params) {
+function formatArguments(params) {
     return params.reduce(
         (acc, curr) => ({ ...acc, [curr.name]: curr.value }),
         {}
@@ -107,12 +100,17 @@ function RoutePlayground({ route }) {
         [route]
     )
 
+    const handleChangeJsonBody = useCallback(
+        content => console.log(content),
+        []
+    )
+
     useEffect(() => {
-        const stored = getRouteConfig(route.__id)
+        const stored = getRouteArguments(route.__id)
         route.parameters
             .filter(p => !stored.parameters.includes(p))
             .forEach(param => {
-                addRouteConfigItem(route.__id, "parameters", {
+                addRouteArgumentItem(route.__id, "parameters", {
                     __id: generateFieldId(),
                     name: param,
                     value: ""
@@ -121,7 +119,7 @@ function RoutePlayground({ route }) {
     }, [route])
 
     useEffect(() => {
-        const stored = getRouteConfig(route.__id)
+        const stored = getRouteArguments(route.__id)
         setState.parameters(format.parameters(route, stored.parameters))
         setState.queryStrings(format.queryStrings(route, stored.queryStrings))
         setState.headers(format.headers(route, stored.headers))
@@ -132,8 +130,8 @@ function RoutePlayground({ route }) {
 
     const handleEditArgument = useCallback(
         (type, field, id, value) => {
-            updateRouteConfigItem(route.__id, type, id, field, value)
-            const stored = getRouteConfig(route.__id)
+            updateRouteArgumentItem(route.__id, type, id, field, value)
+            const stored = getRouteArguments(route.__id)
             setState[type](format[type](route, stored[type]))
         },
         [route]
@@ -141,10 +139,10 @@ function RoutePlayground({ route }) {
 
     const handleAddArgument = useCallback(
         type => {
-            addRouteConfigItem(route.__id, type, {
+            addRouteArgumentItem(route.__id, type, {
                 __id: generateFieldId()
             })
-            const stored = getRouteConfig(route.__id)
+            const stored = getRouteArguments(route.__id)
             setState[type](format[type](route, stored[type]))
         },
         [route]
@@ -157,8 +155,8 @@ function RoutePlayground({ route }) {
         axios({
             method: route.http_verb.toLowerCase(),
             url: formatUrl(route.url, parameters),
-            params: formatParams(queryStrings),
-            headers: formatHeaders(headers),
+            params: formatArguments(queryStrings),
+            headers: formatArguments(headers),
             cancelToken: sourceToken.token
         })
             .then(response => {
@@ -201,6 +199,7 @@ function RoutePlayground({ route }) {
                 onMakeRequest={handleMakeRequest}
                 onCancelRequest={handleCancelRequest}
                 onAddArgument={handleAddArgument}
+                onChangeJsonBody={handleChangeJsonBody}
                 onEditArgument={handleEditArgument}
                 isRequesting={isRequesting}
                 parameters={parameters}
