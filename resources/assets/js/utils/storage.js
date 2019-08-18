@@ -8,7 +8,8 @@ export function getRouteArguments(routeId) {
     const defaultConfig = {
         parameters: [],
         queryStrings: [],
-        headers: []
+        headers: [],
+        body: {}
     }
 
     if (!config) {
@@ -23,24 +24,37 @@ export function getRouteArguments(routeId) {
 }
 
 export function addRouteArgumentItem(routeId, type, params) {
-    const routeConfig = getRouteArguments(routeId)
+    const routeArgs = getRouteArguments(routeId)
     const newItemValue = [
-        ...routeConfig[type],
+        ...routeArgs[type],
         { name: "", value: "", ...params }
     ]
-    persist(routeId, routeConfig, type, newItemValue)
+    persist(routeId, type, newItemValue)
 }
 
 export function updateRouteArgumentItem(routeId, type, itemId, field, value) {
-    const routeConfig = getRouteArguments(routeId)
+    const routeArgs = getRouteArguments(routeId)
     const updateItem = item =>
         item.__id === itemId ? { ...item, [field]: value } : item
-    const newItemValue = routeConfig[type].map(updateItem)
-    persist(routeId, routeConfig, type, newItemValue)
+    const newItemValue = routeArgs[type].map(updateItem)
+    persist(routeId, type, newItemValue)
 }
 
-function persist(routeId, routeConfig, type, newItemValue) {
-    const newConfigValue = { ...routeConfig, [type]: newItemValue }
+function persist(routeId, type, newItemValue) {
+    const routeArgs = getRouteArguments(routeId)
+    const newConfigValue = { ...routeArgs, [type]: newItemValue }
     const configKey = getKey(routeId)
     window.localStorage.setItem(configKey, JSON.stringify(newConfigValue))
+}
+
+export function updateRouteBodyJson(routeId, content) {
+    persist(routeId, "body", content)
+}
+
+export function setCurrentActiveRouteId(routeId) {
+    window.localStorage.setItem("currentRoute", routeId)
+}
+
+export function getCurrentActiveRouteId() {
+    return window.localStorage.getItem("currentRoute")
 }

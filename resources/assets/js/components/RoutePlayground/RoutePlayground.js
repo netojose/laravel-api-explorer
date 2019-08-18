@@ -18,8 +18,10 @@ import ResponseArea from "./ResponseArea"
 import { route as routePropType } from "../../utils/sharedPropTypes"
 import {
     getRouteArguments,
+    addRouteArgumentItem,
     updateRouteArgumentItem,
-    addRouteArgumentItem
+    updateRouteBodyJson,
+    getCurrentActiveRouteId
 } from "../../utils/storage"
 
 function generateFieldId() {
@@ -90,6 +92,7 @@ function RoutePlayground({ route }) {
     const [parameters, setParameters] = useState([])
     const [queryStrings, setQueryStrings] = useState([])
     const [headers, setHeaders] = useState([])
+    const [body, setBody] = useState({})
 
     const setState = useMemo(
         () => ({
@@ -97,13 +100,21 @@ function RoutePlayground({ route }) {
             queryStrings: setQueryStrings,
             headers: setHeaders
         }),
-        [route]
+        [route.__id]
     )
 
-    const handleChangeJsonBody = useCallback(
-        content => console.log(content),
-        []
-    )
+    const handleChangeJsonBody = useCallback(content => {
+        try {
+            const body = JSON.parse(content)
+            const currentRouteId = getCurrentActiveRouteId()
+            if (currentRouteId) {
+                updateRouteBodyJson(currentRouteId, body)
+                setBody(body)
+            }
+        } catch (e) {
+            // invalid json
+        }
+    }, [])
 
     useEffect(() => {
         const stored = getRouteArguments(route.__id)
@@ -117,14 +128,15 @@ function RoutePlayground({ route }) {
                     value: ""
                 })
             })
-    }, [route])
+    }, [route.__id])
 
     useEffect(() => {
         const stored = getRouteArguments(route.__id)
         setState.parameters(format.parameters(route, stored.parameters))
         setState.queryStrings(format.queryStrings(route, stored.queryStrings))
         setState.headers(format.headers(route, stored.headers))
-    }, [route])
+        setBody(stored.body)
+    }, [route.__id])
 
     const openDrawer = useCallback(() => setShowDrawer(true), [])
     const handlCloseDrawer = useCallback(() => setShowDrawer(false), [])
@@ -135,7 +147,7 @@ function RoutePlayground({ route }) {
             const stored = getRouteArguments(route.__id)
             setState[type](format[type](route, stored[type]))
         },
-        [route]
+        [route.__id]
     )
 
     const handleAddArgument = useCallback(
@@ -146,7 +158,7 @@ function RoutePlayground({ route }) {
             const stored = getRouteArguments(route.__id)
             setState[type](format[type](route, stored[type]))
         },
-        [route]
+        [route.__id]
     )
 
     const handleMakeRequest = useCallback(() => {
@@ -167,7 +179,7 @@ function RoutePlayground({ route }) {
             .catch(() => {
                 setIsRequesting(false)
             })
-    }, [route, parameters, queryStrings, headers])
+    }, [route.__id, parameters, queryStrings, headers])
 
     const handleCancelRequest = useCallback(() => {
         source && source.cancel()
@@ -176,7 +188,7 @@ function RoutePlayground({ route }) {
     useEffect(() => {
         setIsRequesting(false)
         source && source.cancel()
-    }, [route])
+    }, [route.__id])
 
     useEffect(() => () => source && source.cancel(), [])
 
@@ -206,6 +218,7 @@ function RoutePlayground({ route }) {
                 parameters={parameters}
                 queryStrings={queryStrings}
                 headers={headers}
+                jsonBody={body}
             />
             <ResponseArea
                 response={responses[route.__id]}

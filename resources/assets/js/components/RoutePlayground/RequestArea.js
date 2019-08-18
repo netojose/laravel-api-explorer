@@ -53,7 +53,8 @@ function RequestArea({
     queryStrings,
     headers,
     onEditArgument,
-    onAddArgument
+    onAddArgument,
+    jsonBody
 }) {
     const classes = useStyles()
     const [currentTab, setCurrentTab] = useState(0)
@@ -119,7 +120,7 @@ function RequestArea({
                 />
             </TabPanel>
             <TabPanel value={currentTab} index={1}>
-                <JsonEditor initialContent={{}} onChange={onChangeJsonBody} />
+                <JsonEditor onChange={onChangeJsonBody} content={jsonBody} />
             </TabPanel>
             <TabPanel value={currentTab} index={2}>
                 <ArgumentsList
@@ -149,7 +150,8 @@ RequestArea.propTypes = {
     queryStrings: argumentsListPropTypes.isRequired,
     headers: argumentsListPropTypes.isRequired,
     onEditArgument: PropTypes.func.isRequired,
-    onAddArgument: PropTypes.func.isRequired
+    onAddArgument: PropTypes.func.isRequired,
+    jsonBody: PropTypes.object.isRequired
 }
 
 export default RequestArea

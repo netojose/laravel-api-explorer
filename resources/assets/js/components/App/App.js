@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState, useMemo, useCallback } from "react"
 import axios from "axios"
 import hashSum from "hash-sum"
 import { makeStyles } from "@material-ui/core/styles"
@@ -10,6 +10,11 @@ import Box from "@material-ui/core/Box"
 import Paper from "@material-ui/core/Paper"
 import RoutesList from "../RoutesList"
 import RoutePlayground from "../RoutePlayground"
+
+import {
+    setCurrentActiveRouteId,
+    getCurrentActiveRouteId
+} from "../../utils/storage"
 
 const APPBAR_HEIGHT = "64px"
 
@@ -41,6 +46,16 @@ function App() {
         })
     }, [])
 
+    useEffect(() => {
+        const routeId = getCurrentActiveRouteId()
+        setSelectedRoute(routeId)
+    }, [])
+
+    const handleSetRoute = useCallback(routeId => {
+        setCurrentActiveRouteId(routeId)
+        setSelectedRoute(routeId)
+    }, [])
+
     const currentRoute = useMemo(
         () =>
             !selectedRoute
@@ -64,7 +79,7 @@ function App() {
                 <RoutesList
                     routes={data.routes}
                     selected={selectedRoute}
-                    onSelect={setSelectedRoute}
+                    onSelect={handleSetRoute}
                 />
             </Grid>
             <Grid item md={9} className={classes.playground}>
