@@ -52,10 +52,11 @@ function RequestArea({
     parameters,
     queryStrings,
     headers,
+    jsonBody,
     onEditArgument,
     onAddArgument,
     onRemoveArgument,
-    jsonBody
+    onToggleCheckArgument
 }) {
     const classes = useStyles()
     const [currentTab, setCurrentTab] = useState(0)
@@ -80,6 +81,11 @@ function RequestArea({
     const handleRemoveArgumentQueryString = id =>
         onRemoveArgument("queryStrings", id)
     const handleRemoveArgumentHeader = id => onRemoveArgument("headers", id)
+
+    const handleToggleCheckArgumentQueryString = id =>
+        onToggleCheckArgument("queryStrings", id)
+    const handleToggleCheckArgumentHeader = id =>
+        onToggleCheckArgument("headers", id)
 
     return (
         <Panel
@@ -134,6 +140,7 @@ function RequestArea({
                     onChangeValue={handleChangeQSValue}
                     onAddArgument={handleAddArgumentQueryString}
                     onRemoveArgument={handleRemoveArgumentQueryString}
+                    onToggleCheckArgument={handleToggleCheckArgumentQueryString}
                 />
             </TabPanel>
             <TabPanel value={currentTab} index={3}>
@@ -143,6 +150,7 @@ function RequestArea({
                     onChangeValue={handleChangeHeaderValue}
                     onAddArgument={handleAddArgumentHeader}
                     onRemoveArgument={handleRemoveArgumentHeader}
+                    onToggleCheckArgument={handleToggleCheckArgumentHeader}
                 />
             </TabPanel>
         </Panel>
@@ -156,10 +164,11 @@ RequestArea.propTypes = {
     parameters: argumentsListPropTypes.isRequired,
     queryStrings: argumentsListPropTypes.isRequired,
     headers: argumentsListPropTypes.isRequired,
+    jsonBody: PropTypes.object.isRequired,
     onEditArgument: PropTypes.func.isRequired,
     onAddArgument: PropTypes.func.isRequired,
     onRemoveArgument: PropTypes.func.isRequired,
-    jsonBody: PropTypes.object.isRequired
+    onToggleCheckArgument: PropTypes.func.isRequired
 }
 
 export default RequestArea

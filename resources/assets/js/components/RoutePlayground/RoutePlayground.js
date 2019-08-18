@@ -21,6 +21,7 @@ import {
     addRouteArgumentItem,
     updateRouteArgumentItem,
     removeRouteArgumentItem,
+    toggleCheckRouteArgumentItem,
     updateRouteBodyJson,
     getCurrentActiveRouteId
 } from "../../utils/storage"
@@ -59,7 +60,8 @@ function formatUrl(url, parameters) {
 
 function formatArguments(params) {
     return params.reduce(
-        (acc, curr) => ({ ...acc, [curr.name]: curr.value }),
+        (acc, curr) =>
+            curr.checked ? { ...acc, [curr.name]: curr.value } : acc,
         {}
     )
 }
@@ -171,6 +173,15 @@ function RoutePlayground({ route }) {
         [route.__id]
     )
 
+    const handleToggleCheckArgument = useCallback(
+        (type, id) => {
+            toggleCheckRouteArgumentItem(route.__id, type, id)
+            const stored = getRouteArguments(route.__id)
+            setState[type](format[type](route, stored[type]))
+        },
+        [route.__id]
+    )
+
     const handleMakeRequest = useCallback(() => {
         setIsRequesting(true)
         const sourceToken = axios.CancelToken.source()
@@ -229,6 +240,7 @@ function RoutePlayground({ route }) {
                 onRemoveArgument={handleRemoveArgument}
                 onChangeJsonBody={handleChangeJsonBody}
                 onEditArgument={handleEditArgument}
+                onToggleCheckArgument={handleToggleCheckArgument}
                 isRequesting={isRequesting}
                 parameters={parameters}
                 queryStrings={queryStrings}

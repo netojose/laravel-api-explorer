@@ -27,7 +27,8 @@ function ArgumentsList({
     onChangeValue,
     onChangeName,
     onAddArgument,
-    onRemoveArgument
+    onRemoveArgument,
+    onToggleCheckArgument
 }) {
     const classes = useStyles()
     return (
@@ -66,8 +67,11 @@ function ArgumentsList({
                             endAdornment={
                                 <Fragment>
                                     <Checkbox
-                                        checked={false}
-                                        onChange={() => null}
+                                        checked={item.checked}
+                                        onChange={() =>
+                                            onToggleCheckArgument(item.__id)
+                                        }
+                                        disabled={!onToggleCheckArgument}
                                         value={true}
                                         color="primary"
                                         inputProps={{
@@ -77,6 +81,7 @@ function ArgumentsList({
                                     <InputAdornment position="end">
                                         <IconButton
                                             aria-label="Remove field"
+                                            disabled={!onRemoveArgument}
                                             onClick={() =>
                                                 onRemoveArgument(item.__id)
                                             }
@@ -105,7 +110,8 @@ function ArgumentsList({
 ArgumentsList.defaultProps = {
     enabledAddArgument: true,
     onAddArgument: () => undefined,
-    onRemoveArgument: () => undefined,
+    onRemoveArgument: null,
+    onToggleCheckArgument: null,
     onChangeName: () => undefined
 }
 ArgumentsList.propTypes = {
@@ -114,6 +120,7 @@ ArgumentsList.propTypes = {
     onChangeName: PropTypes.func,
     onAddArgument: PropTypes.func,
     onRemoveArgument: PropTypes.func,
+    onToggleCheckArgument: PropTypes.func,
     enabledAddArgument: PropTypes.bool
 }
 
