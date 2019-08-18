@@ -107,8 +107,9 @@ function RoutePlayground({ route }) {
 
     useEffect(() => {
         const stored = getRouteArguments(route.__id)
+        const storedParamsItems = stored.parameters.map(p => p.name)
         route.parameters
-            .filter(p => !stored.parameters.includes(p))
+            .filter(p => !storedParamsItems.includes(p))
             .forEach(param => {
                 addRouteArgumentItem(route.__id, "parameters", {
                     __id: generateFieldId(),
