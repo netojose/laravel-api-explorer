@@ -40,6 +40,12 @@ export function updateRouteArgumentItem(routeId, type, itemId, field, value) {
     persist(routeId, type, newItemValue)
 }
 
+export function removeRouteArgumentItem(routeId, type, itemId) {
+    const routeArgs = getRouteArguments(routeId)
+    const newItemValue = routeArgs[type].filter(item => item.__id !== itemId)
+    persist(routeId, type, newItemValue)
+}
+
 function persist(routeId, type, newItemValue) {
     const routeArgs = getRouteArguments(routeId)
     const newConfigValue = { ...routeArgs, [type]: newItemValue }

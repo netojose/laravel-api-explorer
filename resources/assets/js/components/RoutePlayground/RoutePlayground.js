@@ -20,6 +20,7 @@ import {
     getRouteArguments,
     addRouteArgumentItem,
     updateRouteArgumentItem,
+    removeRouteArgumentItem,
     updateRouteBodyJson,
     getCurrentActiveRouteId
 } from "../../utils/storage"
@@ -161,6 +162,15 @@ function RoutePlayground({ route }) {
         [route.__id]
     )
 
+    const handleRemoveArgument = useCallback(
+        (type, id) => {
+            removeRouteArgumentItem(route.__id, type, id)
+            const stored = getRouteArguments(route.__id)
+            setState[type](format[type](route, stored[type]))
+        },
+        [route.__id]
+    )
+
     const handleMakeRequest = useCallback(() => {
         setIsRequesting(true)
         const sourceToken = axios.CancelToken.source()
@@ -216,6 +226,7 @@ function RoutePlayground({ route }) {
                 onMakeRequest={handleMakeRequest}
                 onCancelRequest={handleCancelRequest}
                 onAddArgument={handleAddArgument}
+                onRemoveArgument={handleRemoveArgument}
                 onChangeJsonBody={handleChangeJsonBody}
                 onEditArgument={handleEditArgument}
                 isRequesting={isRequesting}

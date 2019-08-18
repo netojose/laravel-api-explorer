@@ -33,7 +33,7 @@ function ResponseArea({ response, isRequesting }) {
 
             {isRequesting && <CircularProgress className={classes.progress} />}
 
-            {response && <JsonViewer content={response} />}
+            {response && <JsonViewer content={response.data} />}
         </Panel>
     )
 }

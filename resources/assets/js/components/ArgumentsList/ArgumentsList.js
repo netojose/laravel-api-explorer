@@ -26,7 +26,8 @@ function ArgumentsList({
     enabledAddArgument,
     onChangeValue,
     onChangeName,
-    onAddArgument
+    onAddArgument,
+    onRemoveArgument
 }) {
     const classes = useStyles()
     return (
@@ -74,7 +75,12 @@ function ArgumentsList({
                                         }}
                                     />
                                     <InputAdornment position="end">
-                                        <IconButton aria-label="Remove field">
+                                        <IconButton
+                                            aria-label="Remove field"
+                                            onClick={() =>
+                                                onRemoveArgument(item.__id)
+                                            }
+                                        >
                                             <DeleteIcon />
                                         </IconButton>
                                     </InputAdornment>
@@ -99,6 +105,7 @@ function ArgumentsList({
 ArgumentsList.defaultProps = {
     enabledAddArgument: true,
     onAddArgument: () => undefined,
+    onRemoveArgument: () => undefined,
     onChangeName: () => undefined
 }
 ArgumentsList.propTypes = {
@@ -106,6 +113,7 @@ ArgumentsList.propTypes = {
     onChangeValue: PropTypes.func.isRequired,
     onChangeName: PropTypes.func,
     onAddArgument: PropTypes.func,
+    onRemoveArgument: PropTypes.func,
     enabledAddArgument: PropTypes.bool
 }
 

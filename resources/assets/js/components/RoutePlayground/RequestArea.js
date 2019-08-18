@@ -54,6 +54,7 @@ function RequestArea({
     headers,
     onEditArgument,
     onAddArgument,
+    onRemoveArgument,
     jsonBody
 }) {
     const classes = useStyles()
@@ -75,6 +76,10 @@ function RequestArea({
 
     const handleAddArgumentQueryString = () => onAddArgument("queryStrings")
     const handleAddArgumentHeader = () => onAddArgument("headers")
+
+    const handleRemoveArgumentQueryString = id =>
+        onRemoveArgument("queryStrings", id)
+    const handleRemoveArgumentHeader = id => onRemoveArgument("headers", id)
 
     return (
         <Panel
@@ -128,6 +133,7 @@ function RequestArea({
                     onChangeName={handleChangeQSName}
                     onChangeValue={handleChangeQSValue}
                     onAddArgument={handleAddArgumentQueryString}
+                    onRemoveArgument={handleRemoveArgumentQueryString}
                 />
             </TabPanel>
             <TabPanel value={currentTab} index={3}>
@@ -136,6 +142,7 @@ function RequestArea({
                     onChangeName={handleChangeHeaderName}
                     onChangeValue={handleChangeHeaderValue}
                     onAddArgument={handleAddArgumentHeader}
+                    onRemoveArgument={handleRemoveArgumentHeader}
                 />
             </TabPanel>
         </Panel>
@@ -151,6 +158,7 @@ RequestArea.propTypes = {
     headers: argumentsListPropTypes.isRequired,
     onEditArgument: PropTypes.func.isRequired,
     onAddArgument: PropTypes.func.isRequired,
+    onRemoveArgument: PropTypes.func.isRequired,
     jsonBody: PropTypes.object.isRequired
 }
 
