@@ -8,7 +8,10 @@ function JsonViewer({ content }) {
 
     useEffect(() => {
         const options = {
-            mode: "view"
+            mode: "view",
+            enableSort: false,
+            enableTransform: false,
+            modes: ["view", "preview"]
         }
         viewerNodeRef.current = new JSONEditor(
             viewerNodeRef.current,
