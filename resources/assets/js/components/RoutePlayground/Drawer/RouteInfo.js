@@ -17,7 +17,7 @@ import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 
-import { route as routePropType } from "../../utils/sharedPropTypes"
+import { route as routePropType } from "../../../utils/sharedPropTypes"
 
 const useStyles = makeStyles(theme => ({
     routeInfoSection: {

@@ -12,7 +12,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import axios from "axios"
 
 import ChipHttpVerb from "../ChipHttpVerb"
-import DrawerRoute from "./DrawerRoute"
+import DrawerRoute from "./Drawer/DrawerRoute"
 import RequestArea from "./RequestArea"
 import ResponseArea from "./ResponseArea"
 import { route as routePropType } from "../../utils/sharedPropTypes"

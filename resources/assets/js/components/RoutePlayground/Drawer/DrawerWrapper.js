@@ -6,8 +6,6 @@ import Button from "@material-ui/core/Button"
 import DrawerMUI from "@material-ui/core/Drawer"
 import { makeStyles } from "@material-ui/core/styles"
 
-import { route as routePropType } from "../../utils/sharedPropTypes"
-
 const useStyles = makeStyles(theme => ({
     buttonCloseDrawer: {
         margin: `${theme.spacing(1)}px 0`
@@ -17,14 +15,12 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-import RouteInfo from "./RouteInfo"
-
-function DrawerRoute({ showDrawer, handleCloseDrawer, route }) {
+function DrawerWrapper({ showDrawer, handleCloseDrawer, children }) {
     const classes = useStyles()
     return (
         <DrawerMUI anchor="right" open={showDrawer} onClose={handleCloseDrawer}>
             <Box className={classes.drawerContent}>
-                <RouteInfo route={route} />
+                {children}
                 <Typography component="p" align="center">
                     <Button
                         size="small"
@@ -40,10 +36,10 @@ function DrawerRoute({ showDrawer, handleCloseDrawer, route }) {
         </DrawerMUI>
     )
 }
-DrawerRoute.propTypes = {
+DrawerWrapper.propTypes = {
     showDrawer: PropTypes.bool.isRequired,
     handleCloseDrawer: PropTypes.func.isRequired,
-    route: routePropType
+    children: PropTypes.node.isRequired
 }
 
-export default DrawerRoute
+export default DrawerWrapper

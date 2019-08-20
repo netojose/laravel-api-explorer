@@ -32,7 +32,7 @@ JsonViewer.defaultProps = {
 }
 
 JsonViewer.propTypes = {
-    content: PropTypes.object
+    content: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 }
 
 export default JsonViewer

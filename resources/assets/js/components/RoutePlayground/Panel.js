@@ -26,7 +26,7 @@ Panel.defaultProps = {
     actions: null
 }
 Panel.propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.node.isRequired,
     children: PropTypes.node.isRequired,
     actions: PropTypes.node
 }
