@@ -11,10 +11,12 @@ function DrawerResponse({ showDrawer, handleCloseDrawer, data }) {
             showDrawer={showDrawer}
             handleCloseDrawer={handleCloseDrawer}
         >
-            <InfoList>
-                <InfoList.Item label="Status" value={data.status} />
-                <InfoList.Item label="Status text" value={data.statusText} />
-            </InfoList>
+            <InfoList
+                items={[
+                    { label: "Status", value: data.status },
+                    { label: "Status text", value: data.statusText }
+                ]}
+            />
             <DescriptionTable
                 title="Headers"
                 columnLabel="Header"

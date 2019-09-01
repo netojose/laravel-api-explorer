@@ -25,27 +25,23 @@ function RouteInfo({ route }) {
             >
                 Route info
             </Typography>
-            <InfoList>
-                <InfoList.Item label="Method" value={route.http_verb} />
-                <InfoList.Item label="Name" value={route.name} />
-                <InfoList.Item label="Controller" value={route.controller} />
-                <InfoList.Item label="Action" value={route.action} />
-                <InfoList.Item
-                    label="Request handler"
-                    value={route.request_handler}
-                />
-                <InfoList.Item label="Description" value={route.description} />
-                <InfoList.Item label="Path" value={route.uri} />
-                <InfoList.Item label="URL" value={route.url} />
-                <InfoList.Item
-                    label="Middlewares"
-                    value={route.middlewares.join(", ")}
-                />
-                <InfoList.Item
-                    label="Parameters"
-                    value={route.parameters.join(", ")}
-                />
-            </InfoList>
+            <InfoList
+                items={[
+                    { label: "Method", value: route.http_verb },
+                    { label: "Name", value: route.name },
+                    { label: "Controller", value: route.controller },
+                    { label: "Action", value: route.action },
+                    { label: "Request handler", value: route.request_handler },
+                    { label: "Description", value: route.description },
+                    { label: "Path", value: route.uri },
+                    { label: "URL", value: route.url },
+                    {
+                        label: "Middlewares",
+                        value: route.middlewares.join(", ")
+                    },
+                    { label: "Parameters", value: route.parameters.join(", ") }
+                ]}
+            />
             <Divider />
             <DescriptionTable
                 title="Validation rules"

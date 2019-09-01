@@ -13,44 +13,34 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const InfoList = ({ children }) => {
+const EmptyMsg = () => (
+    <Typography component="span" variant="body2" color="error">
+        No value
+    </Typography>
+)
+
+const InfoList = ({ items }) => {
     const classes = useStyles()
     return (
         <List className={classes.list} dense disablePadding>
-            {children}
+            {items.map(item => (
+                <ListItem dense key={item.label}>
+                    <ListItemText
+                        primary={item.label}
+                        secondary={item.value || <EmptyMsg />}
+                    />
+                </ListItem>
+            ))}
         </List>
     )
 }
 InfoList.propTypes = {
-    children: PropTypes.node
-}
-
-InfoList.Item = ({ label, value }) => (
-    <ListItem dense>
-        <ListItemText
-            primary={label}
-            secondary={value || <ErrorMsg text="No value" />}
-        />
-    </ListItem>
-)
-InfoList.Item.displayName = "InfoListItem"
-InfoList.Item.propTypes = {
-    label: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-}
-InfoList.Item.defaultProps = {
-    value: null
-}
-
-const ErrorMsg = ({ text }) => {
-    return (
-        <Typography component="span" variant="body2" color="error">
-            {text}
-        </Typography>
+    items: PropTypes.arrayOf(
+        PropTypes.shape({
+            label: PropTypes.string.isRequired,
+            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        })
     )
-}
-ErrorMsg.propTypes = {
-    text: PropTypes.string.isRequired
 }
 
 export default InfoList
