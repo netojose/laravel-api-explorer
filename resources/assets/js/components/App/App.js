@@ -6,6 +6,10 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import Box from "@material-ui/core/Box"
 import Paper from "@material-ui/core/Paper"
+import IconButton from "@material-ui/core/IconButton"
+import BuildIcon from "@material-ui/icons/Build"
+
+import ModalConfig from "../ModalConfig"
 import RoutesList from "../RoutesList"
 import RoutePlayground from "../RoutePlayground"
 
@@ -21,6 +25,9 @@ import request from "../../utils/request"
 const APPBAR_HEIGHT = "64px"
 
 const useStyles = makeStyles(theme => ({
+    appName: {
+        flexGrow: 1
+    },
     playground: {
         backgroundColor: theme.palette.background.default
     },
@@ -36,6 +43,7 @@ const useStyles = makeStyles(theme => ({
 function App() {
     const classes = useStyles()
     const [data, setData] = useState({ config: { app_name: null }, routes: [] })
+    const [modalConfigIsOpen, setModalConfigIsOpen] = useState(false)
     const [selectedRoute, setSelectedRoute] = useState(null)
 
     useEffect(() => {
@@ -58,6 +66,9 @@ function App() {
         setSelectedRoute(routeId)
     }, [])
 
+    const openModalConfig = useCallback(() => setModalConfigIsOpen(true), [])
+    const closeModalConfig = useCallback(() => setModalConfigIsOpen(false), [])
+
     const currentRoute = useMemo(
         () =>
             !selectedRoute
@@ -68,13 +79,24 @@ function App() {
 
     return (
         <Grid container>
+            <ModalConfig
+                open={modalConfigIsOpen}
+                onRequestClose={closeModalConfig}
+            />
             <AppBar position="static" color="default">
                 <Toolbar>
-                    <Typography variant="h6" color="inherit">
+                    <Typography
+                        variant="h6"
+                        color="inherit"
+                        className={classes.appName}
+                    >
                         {data.config.app_name
                             ? `${data.config.app_name} API Explorer`
                             : "Loading..."}
                     </Typography>
+                    <IconButton onClick={openModalConfig}>
+                        <BuildIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <Grid item md={3}>

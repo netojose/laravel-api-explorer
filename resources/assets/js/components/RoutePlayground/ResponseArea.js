@@ -31,7 +31,7 @@ function ResponseArea({ response, isRequesting }) {
         <Panel
             title={
                 <Fragment>
-                    Response{" "}
+                    Response
                     <Button
                         variant="outlined"
                         color="primary"

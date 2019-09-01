@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from "react"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
-import Box from "@material-ui/core/Box"
 import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import Button from "@material-ui/core/Button"
@@ -9,6 +8,7 @@ import Button from "@material-ui/core/Button"
 import Panel from "./Panel"
 import ArgumentsList from "../ArgumentsList"
 import JsonEditor from "./JsonEditor"
+import TabPanel, { a11yProps } from "../TabPanel"
 import { argumentsList as argumentsListPropTypes } from "../../utils/sharedPropTypes"
 
 const useStyles = makeStyles(theme => ({
@@ -19,30 +19,6 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1)
     }
 }))
-
-const TabPanel = ({ children, value, index }) =>
-    value === index ? (
-        <Box
-            m={1}
-            role="tabpanel"
-            id={`request-tabpanel-${index}`}
-            ria-labelledby={`request-tab-${index}`}
-        >
-            {children}
-        </Box>
-    ) : null
-TabPanel.propTypes = {
-    children: PropTypes.node.isRequired,
-    value: PropTypes.number.isRequired,
-    index: PropTypes.number.isRequired
-}
-
-function a11yProps(index) {
-    return {
-        id: `request-tab-${index}`,
-        "aria-controls": `request-tabpanel-${index}`
-    }
-}
 
 function RequestArea({
     onMakeRequest,
@@ -116,24 +92,24 @@ function RequestArea({
             <Tabs
                 value={currentTab}
                 onChange={handleChangeTab}
-                aria-label="simple tabs example"
+                aria-label="Request config"
             >
-                <Tab label="Route parameters" {...a11yProps(0)} />
-                <Tab label="Body" {...a11yProps(1)} />
-                <Tab label="Query string" {...a11yProps(2)} />
-                <Tab label="Headers" {...a11yProps(3)} />
+                <Tab label="Route parameters" {...a11yProps("request", 0)} />
+                <Tab label="Body" {...a11yProps("request", 1)} />
+                <Tab label="Query string" {...a11yProps("request", 2)} />
+                <Tab label="Headers" {...a11yProps("request", 3)} />
             </Tabs>
-            <TabPanel value={currentTab} index={0}>
+            <TabPanel value={currentTab} index={0} id="request">
                 <ArgumentsList
                     items={parameters}
                     onChangeValue={handleChangeParameterValue}
                     enabledAddArgument={false}
                 />
             </TabPanel>
-            <TabPanel value={currentTab} index={1}>
+            <TabPanel value={currentTab} index={1} id="request">
                 <JsonEditor onChange={onChangeJsonBody} content={jsonBody} />
             </TabPanel>
-            <TabPanel value={currentTab} index={2}>
+            <TabPanel value={currentTab} index={2} id="request">
                 <ArgumentsList
                     items={queryStrings}
                     onChangeName={handleChangeQSName}
@@ -143,7 +119,7 @@ function RequestArea({
                     onToggleCheckArgument={handleToggleCheckArgumentQueryString}
                 />
             </TabPanel>
-            <TabPanel value={currentTab} index={3}>
+            <TabPanel value={currentTab} index={3} id="request">
                 <ArgumentsList
                     items={headers}
                     onChangeName={handleChangeHeaderName}
