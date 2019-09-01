@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react"
 import axios from "axios"
-import hashSum from "hash-sum"
 import { makeStyles } from "@material-ui/core/styles"
 import Grid from "@material-ui/core/Grid"
 import AppBar from "@material-ui/core/AppBar"
@@ -15,6 +14,8 @@ import {
     setCurrentActiveRouteId,
     getCurrentActiveRouteId
 } from "../../utils/storage"
+
+import { generateRouteId } from "../../utils/hash"
 
 const APPBAR_HEIGHT = "64px"
 
@@ -40,7 +41,7 @@ function App() {
         axios.get(window.api_info_url).then(({ data }) => {
             data.routes = data.routes.map(route => ({
                 ...route,
-                __id: `route_${hashSum(route)}`
+                __id: generateRouteId(route)
             }))
             setData(data)
         })
