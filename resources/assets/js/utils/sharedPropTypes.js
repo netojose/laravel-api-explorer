@@ -23,6 +23,7 @@ export const argumentsList = PropTypes.arrayOf(
         disabledKey: PropTypes.bool,
         placeholderValue: PropTypes.string,
         name: PropTypes.string,
-        value: PropTypes.string
+        value: PropTypes.string,
+        checked: PropTypes.bool
     })
 )
