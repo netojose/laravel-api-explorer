@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(0.5)
     },
     avatar: {
-        background: "transparent"
+        background: theme.palette.grey[300]
     }
 }))
 
@@ -89,7 +89,7 @@ const TableCellValue = ({ content }) => {
                             itemValue === value ? null : (
                                 <Avatar className={classes.avatar}>
                                     <Tooltip title={value}>
-                                        <HelpIcon />
+                                        <HelpIcon color="primary" />
                                     </Tooltip>
                                 </Avatar>
                             )
