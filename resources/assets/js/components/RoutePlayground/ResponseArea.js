@@ -64,6 +64,7 @@ function ResponseArea({ response, isRequesting }) {
                         handleCloseDrawer={handlCloseDrawer}
                         data={{
                             status: response.status,
+                            duration: response.duration,
                             statusText: response.statusText,
                             headers: response.headers
                         }}

@@ -14,7 +14,8 @@ function DrawerResponse({ showDrawer, handleCloseDrawer, data }) {
             <InfoList
                 items={[
                     { label: "Status", value: data.status },
-                    { label: "Status text", value: data.statusText }
+                    { label: "Status text", value: data.statusText },
+                    { label: "Duration", value: `${data.duration}ms` }
                 ]}
             />
             <DescriptionTable
@@ -35,6 +36,7 @@ DrawerResponse.propTypes = {
     handleCloseDrawer: PropTypes.func.isRequired,
     data: PropTypes.shape({
         status: PropTypes.number.isRequired,
+        duration: PropTypes.number.isRequired,
         statusText: PropTypes.string.isRequired,
         headers: PropTypes.object.isRequired
     }).isRequired

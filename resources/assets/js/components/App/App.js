@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react"
-import axios from "axios"
 import { makeStyles } from "@material-ui/core/styles"
 import Grid from "@material-ui/core/Grid"
 import AppBar from "@material-ui/core/AppBar"
@@ -16,6 +15,8 @@ import {
 } from "../../utils/storage"
 
 import { generateRouteId } from "../../utils/hash"
+
+import request from "../../utils/request"
 
 const APPBAR_HEIGHT = "64px"
 
@@ -38,7 +39,7 @@ function App() {
     const [selectedRoute, setSelectedRoute] = useState(null)
 
     useEffect(() => {
-        axios.get(window.api_info_url).then(({ data }) => {
+        request.get(window.api_info_url).then(({ data }) => {
             data.routes = data.routes.map(route => ({
                 ...route,
                 __id: generateRouteId(route)

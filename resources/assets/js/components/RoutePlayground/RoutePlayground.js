@@ -9,13 +9,16 @@ import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles"
-import axios from "axios"
 
 import ChipHttpVerb from "../ChipHttpVerb"
 import DrawerRoute from "./Drawer/DrawerRoute"
 import RequestArea from "./RequestArea"
 import ResponseArea from "./ResponseArea"
+
+import request from "../../utils/request"
+
 import { route as routePropType } from "../../utils/sharedPropTypes"
+
 import {
     getRouteArguments,
     addRouteArgumentItem,
@@ -184,9 +187,9 @@ function RoutePlayground({ route }) {
 
     const handleMakeRequest = useCallback(() => {
         setIsRequesting(true)
-        const sourceToken = axios.CancelToken.source()
+        const sourceToken = request.CancelToken.source()
         setSource(sourceToken)
-        axios({
+        request({
             method: route.http_verb.toLowerCase(),
             url: formatUrl(route.url, parameters),
             params: formatArguments(queryStrings),
