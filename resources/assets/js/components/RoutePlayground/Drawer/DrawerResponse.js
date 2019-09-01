@@ -2,6 +2,8 @@ import React from "react"
 import PropTypes from "prop-types"
 
 import DrawerWrapper from "./DrawerWrapper"
+import DescriptionTable from "../../DescriptionTable"
+import InfoList from "../../InfoList"
 
 function DrawerResponse({ showDrawer, handleCloseDrawer, data }) {
     return (
@@ -9,7 +11,17 @@ function DrawerResponse({ showDrawer, handleCloseDrawer, data }) {
             showDrawer={showDrawer}
             handleCloseDrawer={handleCloseDrawer}
         >
-            <pre>{JSON.stringify(data, null, 2)}</pre>
+            <InfoList>
+                <InfoList.Item label="Status" value={data.status} />
+                <InfoList.Item label="Status text" value={data.statusText} />
+            </InfoList>
+            <DescriptionTable
+                title="Headers"
+                columnLabel="Header"
+                columnValue="Value"
+                emptyMsg="Request without headers"
+                items={data.headers}
+            />
         </DrawerWrapper>
     )
 }
