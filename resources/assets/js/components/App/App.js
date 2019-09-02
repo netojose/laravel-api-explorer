@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper"
 import IconButton from "@material-ui/core/IconButton"
 import BuildIcon from "@material-ui/icons/Build"
 
-import ModalSetings from "../ModalConfig"
+import ModalSetings from "../ModalSetings"
 import RoutesList from "../RoutesList"
 import RoutePlayground from "../RoutePlayground"
 
