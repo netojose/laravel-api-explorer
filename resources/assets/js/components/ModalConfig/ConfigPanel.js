@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback, useMemo, useEffect } from "react"
 import PropTypes from "prop-types"
 import Card from "@material-ui/core/Card"
 import CardHeader from "@material-ui/core/CardHeader"
@@ -12,6 +12,7 @@ import TabPanel, { a11yProps } from "../TabPanel"
 import ArgumentsList from "../ArgumentsList"
 import {
     addGlobalItem,
+    updateGlobalItem,
     removeGlobalItem,
     getGlobalConfig
 } from "../../utils/storage"
@@ -22,39 +23,55 @@ function ConfigPanel({ handleClose }) {
     const [headers, setHeaders] = useState([])
     const handleChangeTab = (_, newValue) => setCurrentTab(newValue)
 
-    const addVariable = useCallback(() => {
-        addGlobalItem("variables")
-        refreshVariables()
-    }, [])
-
-    const addHeader = useCallback(() => {
-        addGlobalItem("headers")
-        refreshHeaders()
-    }, [])
-
-    const removeVariable = useCallback(id => {
-        removeGlobalItem("variables", id)
-        refreshVariables()
-    }, [])
-
-    const removeHeader = useCallback(id => {
-        removeGlobalItem("headers", id)
-        refreshHeaders()
-    }, [])
-
-    const refreshVariables = useCallback(
-        () => setVariables(getGlobalConfig("variables")),
+    const refresh = useMemo(
+        () => ({
+            headers: () => setHeaders(getGlobalConfig("headers")),
+            variables: () => setVariables(getGlobalConfig("variables"))
+        }),
         []
     )
 
-    const refreshHeaders = useCallback(
-        () => setHeaders(getGlobalConfig("headers")),
-        []
-    )
+    const addItem = useCallback(type => {
+        addGlobalItem(type)
+        refresh[type]()
+    }, [])
+
+    const addVariable = () => addItem("variables")
+    const addHeader = () => addItem("headers")
+
+    const removeItem = useCallback((type, id) => {
+        removeGlobalItem(type, id)
+        refresh[type]()
+    }, [])
+
+    const removeVariable = id => removeItem("variables", id)
+    const removeHeader = id => removeItem("headers", id)
+
+    const updateField = useCallback((type, id, field, value) => {
+        updateGlobalItem(type, id, field, value)
+        refresh[type]()
+    }, [])
+
+    const toggleCheck = useCallback((type, id) => {
+        const item = getGlobalConfig(type).find(item => item.__id === id)
+        updateField(type, id, "checked", !item.checked)
+    }, [])
+
+    const toggleCheckVariable = id => toggleCheck("variables", id)
+    const toggleCheckHeader = id => toggleCheck("headers", id)
+
+    const editNameVariable = (id, value) =>
+        updateField("variables", id, "name", value)
+    const editNameHeader = (id, value) =>
+        updateField("headers", id, "name", value)
+    const editValueVariable = (id, value) =>
+        updateField("variables", id, "value", value)
+    const editValueHeader = (id, value) =>
+        updateField("headers", id, "value", value)
 
     useEffect(() => {
-        refreshVariables()
-        refreshHeaders()
+        refresh.variables()
+        refresh.headers()
     }, [])
 
     return (
@@ -72,21 +89,21 @@ function ConfigPanel({ handleClose }) {
                 <TabPanel value={currentTab} index={0} id="settings">
                     <ArgumentsList
                         items={variables}
-                        onChangeValue={() => null}
-                        onChangeName={() => null}
+                        onChangeName={editNameVariable}
+                        onChangeValue={editValueVariable}
                         onAddArgument={addVariable}
                         onRemoveArgument={removeVariable}
-                        onToggleCheckArgument={() => null}
+                        onToggleCheckArgument={toggleCheckVariable}
                     />
                 </TabPanel>
                 <TabPanel value={currentTab} index={1} id="settings">
                     <ArgumentsList
                         items={headers}
-                        onChangeValue={() => null}
-                        onChangeName={() => null}
+                        onChangeName={editNameHeader}
+                        onChangeValue={editValueHeader}
                         onAddArgument={addHeader}
                         onRemoveArgument={removeHeader}
-                        onToggleCheckArgument={() => null}
+                        onToggleCheckArgument={toggleCheckHeader}
                     />
                 </TabPanel>
             </CardContent>

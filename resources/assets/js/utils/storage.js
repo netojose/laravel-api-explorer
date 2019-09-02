@@ -96,6 +96,14 @@ function setGlobalConfig(type, items) {
     window.localStorage.setItem(key, JSON.stringify(items))
 }
 
+export function updateGlobalItem(type, id, field, value) {
+    const items = getGlobalConfig(type)
+    const edited = items.map(item =>
+        item.__id === id ? { ...item, [field]: value } : item
+    )
+    setGlobalConfig(type, edited)
+}
+
 export function addGlobalItem(type) {
     const items = getGlobalConfig(type)
     const id = `field_${window.performance.now()}`
