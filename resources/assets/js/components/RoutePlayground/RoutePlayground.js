@@ -20,6 +20,7 @@ import request from "../../utils/request"
 import { route as routePropType } from "../../utils/sharedPropTypes"
 
 import {
+    generateFieldId,
     getRouteArguments,
     addRouteArgumentItem,
     updateRouteArgumentItem,
@@ -28,10 +29,6 @@ import {
     updateRouteBodyJson,
     getCurrentActiveRouteId
 } from "../../utils/storage"
-
-function generateFieldId() {
-    return `field_${window.performance.now()}`
-}
 
 const format = {
     parameters: (route, stored) =>

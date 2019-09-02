@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper"
 import IconButton from "@material-ui/core/IconButton"
 import BuildIcon from "@material-ui/icons/Build"
 
-import ModalConfig from "../ModalConfig"
+import ModalSetings from "../ModalConfig"
 import RoutesList from "../RoutesList"
 import RoutePlayground from "../RoutePlayground"
 
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 function App() {
     const classes = useStyles()
     const [data, setData] = useState({ config: { app_name: null }, routes: [] })
-    const [modalConfigIsOpen, setModalConfigIsOpen] = useState(false)
+    const [modalSettingsIsOpen, setModalSettingsIsOpen] = useState(false)
     const [selectedRoute, setSelectedRoute] = useState(null)
 
     useEffect(() => {
@@ -66,8 +66,14 @@ function App() {
         setSelectedRoute(routeId)
     }, [])
 
-    const openModalConfig = useCallback(() => setModalConfigIsOpen(true), [])
-    const closeModalConfig = useCallback(() => setModalConfigIsOpen(false), [])
+    const openModalSettings = useCallback(
+        () => setModalSettingsIsOpen(true),
+        []
+    )
+    const closeModalSettings = useCallback(
+        () => setModalSettingsIsOpen(false),
+        []
+    )
 
     const currentRoute = useMemo(
         () =>
@@ -79,9 +85,9 @@ function App() {
 
     return (
         <Grid container>
-            <ModalConfig
-                open={modalConfigIsOpen}
-                onRequestClose={closeModalConfig}
+            <ModalSetings
+                open={modalSettingsIsOpen}
+                onRequestClose={closeModalSettings}
             />
             <AppBar position="static" color="default">
                 <Toolbar>
@@ -94,7 +100,7 @@ function App() {
                             ? `${data.config.app_name} API Explorer`
                             : "Loading..."}
                     </Typography>
-                    <IconButton onClick={openModalConfig}>
+                    <IconButton onClick={openModalSettings}>
                         <BuildIcon />
                     </IconButton>
                 </Toolbar>

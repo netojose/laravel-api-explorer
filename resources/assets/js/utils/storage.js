@@ -6,6 +6,10 @@ function getGlobalKey(type) {
     return `global:${type}`
 }
 
+export function generateFieldId() {
+    return `field_${window.performance.now()}`
+}
+
 export function getRouteArguments(routeId) {
     const key = getRouteKey(routeId)
     const config = window.localStorage.getItem(key)
