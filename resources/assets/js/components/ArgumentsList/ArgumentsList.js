@@ -71,7 +71,10 @@ function ArgumentsList({
                                         onChange={() =>
                                             onToggleCheckArgument(item.__id)
                                         }
-                                        disabled={!onToggleCheckArgument}
+                                        disabled={
+                                            !onToggleCheckArgument ||
+                                            item.disabledToggleCheck
+                                        }
                                         value={true}
                                         color="primary"
                                         inputProps={{
@@ -81,7 +84,10 @@ function ArgumentsList({
                                     <InputAdornment position="end">
                                         <IconButton
                                             aria-label="Remove field"
-                                            disabled={!onRemoveArgument}
+                                            disabled={
+                                                !onRemoveArgument ||
+                                                item.disabledDelete
+                                            }
                                             onClick={() =>
                                                 onRemoveArgument(item.__id)
                                             }

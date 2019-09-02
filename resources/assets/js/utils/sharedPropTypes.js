@@ -20,7 +20,10 @@ export const route = PropTypes.shape({
 export const argumentsList = PropTypes.arrayOf(
     PropTypes.shape({
         __id: PropTypes.string.isRequired,
-        disabledKey: PropTypes.bool,
+        disabledName: PropTypes.bool,
+        disabledValue: PropTypes.bool,
+        disabledDelete: PropTypes.bool,
+        disabledToggleCheck: PropTypes.bool,
         placeholderValue: PropTypes.string,
         name: PropTypes.string,
         value: PropTypes.string,

@@ -17,11 +17,13 @@ import {
     getGlobalConfig
 } from "../../utils/storage"
 
-function SettingsPanel({ handleClose }) {
+function SettingsPanel({ handleClose, onUpdateSettings }) {
     const [currentTab, setCurrentTab] = useState(0)
     const [variables, setVariables] = useState([])
     const [headers, setHeaders] = useState([])
     const handleChangeTab = (_, newValue) => setCurrentTab(newValue)
+
+    useEffect(onUpdateSettings, [variables, headers])
 
     const refresh = useMemo(
         () => ({
@@ -62,10 +64,13 @@ function SettingsPanel({ handleClose }) {
 
     const editNameVariable = (id, value) =>
         updateField("variables", id, "name", value)
+
     const editNameHeader = (id, value) =>
         updateField("headers", id, "name", value)
+
     const editValueVariable = (id, value) =>
         updateField("variables", id, "value", value)
+
     const editValueHeader = (id, value) =>
         updateField("headers", id, "value", value)
 
@@ -116,8 +121,13 @@ function SettingsPanel({ handleClose }) {
     )
 }
 
+SettingsPanel.defaultProps = {
+    onUpdateSettings: () => null
+}
+
 SettingsPanel.propTypes = {
-    handleClose: PropTypes.func.isRequired
+    handleClose: PropTypes.func.isRequired,
+    onUpdateSettings: PropTypes.func
 }
 
 export default SettingsPanel

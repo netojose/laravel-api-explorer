@@ -43,23 +43,28 @@ function RequestArea({
 
     const handleChangeHeaderName = (id, value) =>
         onEditArgument("headers", "name", id, value)
+
     const handleChangeHeaderValue = (id, value) =>
         onEditArgument("headers", "value", id, value)
 
     const handleChangeQSName = (id, value) =>
         onEditArgument("queryStrings", "name", id, value)
+
     const handleChangeQSValue = (id, value) =>
         onEditArgument("queryStrings", "value", id, value)
 
     const handleAddArgumentQueryString = () => onAddArgument("queryStrings")
+
     const handleAddArgumentHeader = () => onAddArgument("headers")
 
     const handleRemoveArgumentQueryString = id =>
         onRemoveArgument("queryStrings", id)
+
     const handleRemoveArgumentHeader = id => onRemoveArgument("headers", id)
 
     const handleToggleCheckArgumentQueryString = id =>
         onToggleCheckArgument("queryStrings", id)
+
     const handleToggleCheckArgumentHeader = id =>
         onToggleCheckArgument("headers", id)
 

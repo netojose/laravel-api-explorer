@@ -15,7 +15,8 @@ import RoutePlayground from "../RoutePlayground"
 
 import {
     setCurrentActiveRouteId,
-    getCurrentActiveRouteId
+    getCurrentActiveRouteId,
+    getGlobalConfig
 } from "../../utils/storage"
 
 import { generateRouteId } from "../../utils/hash"
@@ -42,11 +43,14 @@ const useStyles = makeStyles(theme => ({
 
 function App() {
     const classes = useStyles()
+    const [globalHeaders, setGlobalHeaders] = useState([])
+    const [globalVariables, setGlobalVariables] = useState([])
     const [data, setData] = useState({ config: { app_name: null }, routes: [] })
     const [modalSettingsIsOpen, setModalSettingsIsOpen] = useState(false)
     const [selectedRoute, setSelectedRoute] = useState(null)
 
     useEffect(() => {
+        updateSettingsData()
         request.get(window.api_info_url).then(({ data }) => {
             data.routes = data.routes.map(route => ({
                 ...route,
@@ -54,6 +58,11 @@ function App() {
             }))
             setData(data)
         })
+    }, [])
+
+    const updateSettingsData = useCallback(() => {
+        setGlobalHeaders(getGlobalConfig("headers"))
+        setGlobalVariables(getGlobalConfig("variables"))
     }, [])
 
     useEffect(() => {
@@ -88,6 +97,7 @@ function App() {
             <ModalSetings
                 open={modalSettingsIsOpen}
                 onRequestClose={closeModalSettings}
+                onUpdateSettings={updateSettingsData}
             />
             <AppBar position="static" color="default">
                 <Toolbar>
@@ -114,7 +124,11 @@ function App() {
             </Grid>
             <Grid item md={9} className={classes.playground}>
                 {currentRoute ? (
-                    <RoutePlayground route={currentRoute} />
+                    <RoutePlayground
+                        route={currentRoute}
+                        globalHeaders={globalHeaders}
+                        globalVariables={globalVariables}
+                    />
                 ) : (
                     <Grid
                         container

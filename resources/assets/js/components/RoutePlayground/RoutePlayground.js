@@ -17,7 +17,10 @@ import ResponseArea from "./ResponseArea"
 
 import request from "../../utils/request"
 
-import { route as routePropType } from "../../utils/sharedPropTypes"
+import {
+    route as routePropType,
+    argumentsList as argumentsListPropTypes
+} from "../../utils/sharedPropTypes"
 
 import {
     generateFieldId,
@@ -58,6 +61,10 @@ function formatUrl(url, parameters) {
     return formatedUrl
 }
 
+function formatBody(body) {
+    return body
+}
+
 function formatArguments(params) {
     return params.reduce(
         (acc, curr) =>
@@ -85,7 +92,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function RoutePlayground({ route }) {
+function RoutePlayground({ route, globalHeaders, globalVariables }) {
     const classes = useStyles()
     const [source, setSource] = useState(null)
     const [responses, setResponse] = useState({})
@@ -105,6 +112,22 @@ function RoutePlayground({ route }) {
         }),
         [route.__id]
     )
+
+    const allHeaders = useMemo(
+        () => [
+            ...headers,
+            ...globalHeaders.map(item => ({
+                ...item,
+                disabledName: true,
+                disabledValue: true,
+                disabledDelete: true,
+                disabledToggleCheck: true
+            }))
+        ],
+        [headers, globalHeaders]
+    )
+
+    const variables = useMemo(() => globalVariables, [globalVariables])
 
     const handleChangeJsonBody = useCallback(content => {
         try {
@@ -188,10 +211,10 @@ function RoutePlayground({ route }) {
         setSource(sourceToken)
         request({
             method: route.http_verb.toLowerCase(),
-            url: formatUrl(route.url, parameters),
-            params: formatArguments(queryStrings),
-            headers: formatArguments(headers),
-            data: body,
+            url: formatUrl(route.url, parameters, variables),
+            params: formatArguments(queryStrings, variables),
+            headers: formatArguments(allHeaders, variables),
+            data: formatBody(body, variables),
             cancelToken: sourceToken.token,
             validateStatus: function() {
                 return true
@@ -204,7 +227,7 @@ function RoutePlayground({ route }) {
             .catch(() => {
                 setIsRequesting(false)
             })
-    }, [route.__id, parameters, queryStrings, headers, body])
+    }, [route.__id, parameters, queryStrings, allHeaders, body, variables])
 
     const handleCancelRequest = useCallback(() => {
         source && source.cancel()
@@ -244,7 +267,7 @@ function RoutePlayground({ route }) {
                 isRequesting={isRequesting}
                 parameters={parameters}
                 queryStrings={queryStrings}
-                headers={headers}
+                headers={allHeaders}
                 jsonBody={body}
             />
             <ResponseArea
@@ -261,7 +284,9 @@ function RoutePlayground({ route }) {
 }
 
 RoutePlayground.propTypes = {
-    route: routePropType.isRequired
+    route: routePropType.isRequired,
+    globalHeaders: argumentsListPropTypes.isRequired,
+    globalVariables: argumentsListPropTypes.isRequired
 }
 
 export default RoutePlayground
