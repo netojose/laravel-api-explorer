@@ -22,6 +22,8 @@ import {
     argumentsList as argumentsListPropTypes
 } from "../../utils/sharedPropTypes"
 
+import { replaceAll } from "../../utils/string"
+
 import {
     generateFieldId,
     getRouteArguments,
@@ -44,7 +46,15 @@ const format = {
     headers: (route, stored) => stored
 }
 
-function formatUrl(url, parameters) {
+function applyVariables(str, variables = []) {
+    let newStr = str
+    variables.forEach(v => {
+        newStr = replaceAll(newStr, `$\{${v.name}}`, v.value)
+    })
+    return newStr
+}
+
+function formatUrl(url, parameters, variables) {
     const urlParams = url.match(/\{(.*?)\}/g)
 
     if (!Array.isArray(urlParams)) {
@@ -58,19 +68,19 @@ function formatUrl(url, parameters) {
         const value = parameter ? parameter.value : ""
         formatedUrl = formatedUrl.replace(param, value)
     })
-    return formatedUrl
+    return applyVariables(formatedUrl, variables)
 }
 
-function formatBody(body) {
-    return body
+function formatBody(body, variables) {
+    return JSON.parse(applyVariables(JSON.stringify(body), variables))
 }
 
-function formatArguments(params) {
-    return params.reduce(
-        (acc, curr) =>
-            curr.checked ? { ...acc, [curr.name]: curr.value } : acc,
-        {}
-    )
+function formatArguments(params, variables) {
+    return params.reduce((acc, curr) => {
+        const name = applyVariables(curr.name, variables)
+        const value = applyVariables(curr.value, variables)
+        return curr.checked ? { ...acc, [name]: value } : acc
+    }, {})
 }
 
 const useStyles = makeStyles(theme => ({
@@ -127,7 +137,13 @@ function RoutePlayground({ route, globalHeaders, globalVariables }) {
         [headers, globalHeaders]
     )
 
-    const variables = useMemo(() => globalVariables, [globalVariables])
+    const variables = useMemo(
+        () =>
+            globalVariables
+                .filter(v => v.checked)
+                .map(v => ({ name: v.name, value: v.value })),
+        [globalVariables]
+    )
 
     const handleChangeJsonBody = useCallback(content => {
         try {
