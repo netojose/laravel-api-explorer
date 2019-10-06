@@ -5,6 +5,7 @@ namespace NetoJose\LaravelApiExplorer;
 use Route;
 use ReflectionParameter;
 use ReflectionMethod;
+use Illuminate\Support\Str;
 
 class LaravelApiExplorer
 {
@@ -73,8 +74,8 @@ class LaravelApiExplorer
             $uri = trim($route->uri(), '/');
 
             if (
-                !str_is($match, $name) &&
-                !str_is($match, $uri)
+                !Str::is($match, $name) &&
+                !Str::is($match, $uri)
             ) {
                 continue;
             }
