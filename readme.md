@@ -7,9 +7,23 @@ This is where your description should go. Take a look at [contributing.md](contr
 
 ## Features
 
--   Quick install (one-step install, no code change needed)
--   Store config/parameters to be used anytime
--   Global headers: You can set global headers (like tokens, content-type, etc.) to be used in all requests
+-   Quick install (one-step install, no code change needed);
+-   Zero config needed;
+-   Store config/parameters to be used anytime;
+-   Variables: you can set variables (like id's, tokens, etc. to be used in any place like querystring, header, body, etc.);
+-   Global headers: You can set global headers (like tokens, content-type, etc.) to be used in all requests.
+
+## Live Demo
+
+https://laravel-api-explorer-demo.herokuapp.com/api-explorer
+
+## Using variables
+
+You can click on top right icon (wrench) and add your variables. When you will need to set some querystring parameter, header value, body content, etc., you can use `${VARIABLE_NAME}`, and this placeholder will be replaced by your variable.
+
+## Using global headers
+
+If you API needs some header in all request (or almost), you can set global headers instead of create these headers for every request. You can click on top right icon (wrench) and add your global headers.
 
 ## Screenshots
 
@@ -71,7 +85,7 @@ If you discover any security related issues, please email sputinykster@gmail.com
 [link-packagist]: https://packagist.org/packages/netojose/laravel-api-explorer
 [link-downloads]: https://packagist.org/packages/netojose/laravel-api-explorer
 [link-author]: https://netojose.github.io
-[screenshot-1]: ./resources/assets/screenshots/01.png "Routes list"
-[screenshot-2]: ./resources/assets/screenshots/02.png "Route info"
-[screenshot-3]: ./resources/assets/screenshots/03.png "Request/response"
-[screenshot-4]: ./resources/assets/screenshots/04.png "Response info"
+[screenshot-1]: https://i.imgur.com/MA27Djs.png "Routes list"
+[screenshot-2]: https://i.imgur.com/lZrCPUz.png "Route info"
+[screenshot-3]: https://i.imgur.com/dfXlxiV.png "Request/response"
+[screenshot-4]: https://i.imgur.com/ApPO9Au.png "Response info"
