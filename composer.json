@@ -13,10 +13,10 @@
     ],
     "homepage": "https://github.com/netojose/laravel-api-explorer",
     "keywords": [
-        "Laravel",
-        "API",
-        "REST",
-        "LaravelApiExplorer"
+        "laravel",
+        "api",
+        "rest",
+        "laravel-api-explorer"
     ],
     "autoload": {
         "psr-4": {
