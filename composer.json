@@ -1,7 +1,7 @@
 {
     "name": "netojose/laravel-api-explorer",
     "description": "API explorer for laravel application",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "minimum-stability": "dev",
     "license": "MIT",
     "authors": [
