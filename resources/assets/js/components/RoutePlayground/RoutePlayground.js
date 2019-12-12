@@ -79,7 +79,7 @@ function formatArguments(params, variables) {
     return params.reduce((acc, curr) => {
         const name = applyVariables(curr.name, variables)
         const value = applyVariables(curr.value, variables)
-        return curr.checked ? { ...acc, [name]: value } : acc
+        return curr.checked && name && value ? { ...acc, [name]: value } : acc
     }, {})
 }
 
