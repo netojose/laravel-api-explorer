@@ -2,7 +2,7 @@
 
 namespace NetoJose\LaravelApiExplorer;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 
 class LaravelApiExplorerController extends Controller {
 
