@@ -4,6 +4,7 @@ namespace NetoJose\LaravelApiExplorer;
 
 use Route;
 use ReflectionParameter;
+use ReflectionClass;
 use ReflectionMethod;
 use Illuminate\Support\Str;
 
@@ -169,7 +170,7 @@ class LaravelApiExplorer
 
         if (count($params)) {
             $parameter = new ReflectionParameter([$controller, $method], 0);
-            $requestClass = $parameter->getClass();
+            $requestClass = $parameter->getType() && !$parameter->getType()->isBuiltin()? new ReflectionClass($parameter->getType()->getName()): null;
         }
 
         return $requestClass;
