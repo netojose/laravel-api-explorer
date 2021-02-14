@@ -1,7 +1,7 @@
 {
-    "name": "netojose/laravel-api-explorer",
+    "name": "almahari/laravel-api-explorer",
     "description": "API explorer for laravel application",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "minimum-stability": "dev",
     "license": "MIT",
     "authors": [
