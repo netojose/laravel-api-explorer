@@ -63,7 +63,15 @@ class LaravelApiExplorer
     {
         $filtered = [];
 
-        $match = trim(config('laravelapiexplorer.match'), '/');
+        $match = value(config('laravelapiexplorer.match'), function($match) {
+          if (is_iterable($match)) {
+            return array_map(function ($match) {
+              return trim($match, '/');
+            }, $match);
+          } else {
+            return trim($match, '/');
+          }
+        });
         $ignoreList = collect(config('laravelapiexplorer.ignore'));
         $ignoreList->push('laravelapiexplorer.view');
         $ignoreList->push('laravelapiexplorer.info');
