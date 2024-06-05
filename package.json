@@ -19,7 +19,7 @@
     "dependencies": {
         "@material-ui/core": "^4.5.0",
         "@material-ui/icons": "^4.4.3",
-        "axios": "^0.21.1",
+        "axios": "^0.28.0",
         "hash-sum": "^2.0.0",
         "jsoneditor": "^7.0.5",
         "prop-types": "^15.7.2",
